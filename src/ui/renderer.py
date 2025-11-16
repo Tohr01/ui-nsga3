@@ -18,14 +18,15 @@ HTML_TEMPLATE = string.Template("""
     body {
       margin: 0;
       padding: 0;
-      height: ${canvas_height}px;
-      width: ${canvas_width}px;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f0f0f0;
     }
     body main {
-      width: 100%;
-      height: 100%;
+      height: ${canvas_height}px;
+      width: ${canvas_width}px;
       position: relative;
-      background-color: red;
+      background-color: #ffffff;
     }
     main > * {
       position: absolute;
@@ -59,9 +60,12 @@ class HTMLRenderer:
             )
 
     @staticmethod
-    def get_styled_element(html_element: str, styles_dict: dict) -> str:
+    def get_styled_element(
+        html_element: str, styles_dict: dict, extra_attributes: dict[str, str] = {}
+    ) -> str:
         """
         Wrap the given HTML element with a div that applies the given styles.
         """
         styles = ";".join(f"{k}: {v}" for k, v in styles_dict.items())
-        return f'<{html_element} style="{styles}"></{html_element}>'
+        extra_attrs = " ".join(f'{k}="{v}"' for k, v in extra_attributes.items())
+        return f'<{html_element} style="{styles}" {extra_attrs}></{html_element}>'

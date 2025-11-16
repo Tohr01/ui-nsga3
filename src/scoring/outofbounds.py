@@ -12,22 +12,14 @@ class OutOfBoundsScorer(Scorer):
     def score(self, ui: UserInterface) -> float:
         score = 0
         for element in ui.elements:
-            bbox = element.bbox
-            top_left = self._distance_to_canvas(bbox.x, bbox.y)
-            top_right = self._distance_to_canvas(bbox.x + bbox.width, bbox.y)
-            bottom_left = self._distance_to_canvas(bbox.x, bbox.y + bbox.height)
+            pos = element.position
+            size = element.size
+            top_left = self._distance_to_canvas(pos.x, pos.y)
+            top_right = self._distance_to_canvas(pos.x + size.width, pos.y)
+            bottom_left = self._distance_to_canvas(pos.x, pos.y + size.height)
             bottom_right = self._distance_to_canvas(
-                bbox.x + bbox.width, bbox.y + bbox.height
+                pos.x + size.width, pos.y + size.height
             )
-            # TODO: Maybe average instead of sum?
-            if (
-                top_left == 0
-                and top_right == 0
-                and bottom_left == 0
-                and bottom_right == 0
-            ):
-                score += 10
-            else:
-                score -= top_left + top_right + bottom_left + bottom_right
+            # TODO: Reward if some edge is on the canvas?
+            score -= top_left + top_right + bottom_left + bottom_right
         return score
-

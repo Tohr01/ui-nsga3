@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
-from genetic.attributes.rect import Rect
+from typing import Optional
+from genetic.attributes.position import Position
+from genetic.attributes.size import Size
 from genetic.reproducible import Reproducible
 
 
 class UIElement(Reproducible, ABC):
-    bbox: Rect
+    position: Position
+    size: Size
 
-    def __init__(self, bbox: Rect):
-        self.bbox = bbox
+    def __init__(
+        self, position: Optional[Position] = None, size: Optional[Size] = None
+    ):
+        self.position = position or Position()
+        self.size = size or Size()
 
     @abstractmethod
     def to_html_element(self) -> str:

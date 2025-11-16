@@ -7,11 +7,6 @@ T = TypeVar("T", bound="Reproducible")
 class Reproducible(ABC, Generic[T]):
     @staticmethod
     @abstractmethod
-    def random() -> T:
-        raise NotImplementedError("random method must be implemented by subclass.")
-
-    @staticmethod
-    @abstractmethod
     def crossover(i1: T, i2: T) -> T:
         """
         Crossover two individuals to produce a new individual.

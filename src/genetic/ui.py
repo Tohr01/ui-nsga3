@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from genetic.reproducible import Reproducible
 from ui.element import UIElement
 
@@ -26,12 +24,7 @@ class UserInterface(Reproducible):
 
     def mutate(self, mutation_rate: float):
         for element in self.elements:
-            element_mutation_rate = (
-                mutation_rate
-                * element.mutatable_gene_count()
-                / self.mutatable_gene_count()
-            )
-            element.mutate(element_mutation_rate)
+            element.mutate(mutation_rate)
 
     def mutatable_gene_count(self) -> int:
         return sum(element.mutatable_gene_count() for element in self.elements)
