@@ -14,7 +14,6 @@ class Position(Reproducible):
         x: Optional[float] = None,
         y: Optional[float] = None,
     ):
-        self.x, self.y = (self._init_coordinate(coord) for coord in (x, y))
 
     def _init_coordinate(self, value: Optional[float]) -> float:
         return value if value is not None else random.uniform(0, 1)
@@ -37,4 +36,4 @@ class Position(Reproducible):
         self.y = normal_distribution_mutate(value=self.y, mutation_rate=mutation_rate)
 
     def mutatable_gene_count(self) -> int:
-        return 4
+        return 2 
