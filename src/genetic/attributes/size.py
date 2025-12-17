@@ -1,4 +1,5 @@
 from typing import Optional
+from constants import CANVAS_WIDTH_NORM, CANVAS_HEIGHT_NORM
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from genetic.reproducible import Reproducible
@@ -10,11 +11,12 @@ class Size(Reproducible):
     height: float
 
     def __init__(self, width: Optional[float] = None, height: Optional[float] = None):
-        self.width, self.height = (self._init_dimension(dim) for dim in (width, height))
-
-    def _init_dimension(self, value: Optional[float]) -> float:
-        assert value is None or 0 <= value, "Size dimensions must be non-negative"
-        return value if value is not None else random.uniform(0, 1)
+        self.width = (
+            width if width is not None else random.uniform(0, CANVAS_WIDTH_NORM)
+        )
+        self.height = (
+            height if height is not None else random.uniform(0, CANVAS_HEIGHT_NORM)
+        )
 
     @staticmethod
     def crossover(i1: "Size", i2: "Size") -> "Size":
@@ -27,16 +29,22 @@ class Size(Reproducible):
 
     def mutate(self, mutation_rate: float):
         self.width = max(
-            0, normal_distribution_mutate(value=self.width, mutation_rate=mutation_rate)
+            0,
+            normal_distribution_mutate(
+                value=self.width, mutation_rate=mutation_rate, i_max=CANVAS_WIDTH_NORM
+            ),
         )
         self.height = max(
             0,
-            normal_distribution_mutate(value=self.height, mutation_rate=mutation_rate),
+            normal_distribution_mutate(
+                value=self.height, mutation_rate=mutation_rate, i_max=CANVAS_HEIGHT_NORM
+            ),
         )
 
     def mutatable_gene_count(self) -> int:
         return 2
 
+    # TODO: Maybe precompute and store as instance var
     def area(self) -> float:
         """
         Calculates the area of the size.

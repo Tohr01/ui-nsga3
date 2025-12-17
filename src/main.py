@@ -1,16 +1,14 @@
-from datetime import time
 from typing import Type
 from PIL import Image
 import numpy as np
 import random
 import csv
-from time import time
 
 from constants import (
     FITNESS_MAX_STAGNATION_GENERATIONS,
     MAX_GENERATIONS,
-    MAX_RELATIONAL_HEIGHT,
-    MAX_RELATIONAL_WIDTH,
+    CANVAS_HEIGHT_NORM,
+    CANVAS_WIDTH_NORM,
     OUTPUT_DIR,
     POPULATION_SIZE,
 )
@@ -20,12 +18,14 @@ from scoring.equilibrium import EquilibriumScorer
 from scoring.outofbounds import OutOfBoundsScorer
 from scoring.padding import PaddingScorer
 from scoring.symmetry import SymmetryMode, SymmetryScorer
+from ui.components.box import Box
 from ui.components.image import ScaledImageView
 from ui.element import UIElement
 from ui.renderer import HTMLRenderer
 from util import init_output_dir
 
-print(MAX_RELATIONAL_HEIGHT, MAX_RELATIONAL_WIDTH)
+
+print(CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM)
 
 random.seed(42)
 np.random.seed(42)
@@ -35,10 +35,14 @@ init_output_dir()
 # Structure of elements that should be optimized
 # tuples of class and a initializer dict
 interface_base_structure: list[tuple[Type[UIElement], dict]] = [
-    (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
+    (Box, {}),
+    (Box, {}),
+    (Box, {}),
+    (Box, {}),
+    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
+    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
+    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
+    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
 ]
 
 # Scorers to evaluate UIs with weights
@@ -47,7 +51,7 @@ scorers = [
     (BalanceScorer(), 1),
     (PaddingScorer(), 1),
     (EquilibriumScorer(), 1),
-    (SymmetryScorer(mode=SymmetryMode.HORIZONTAL), 1),
+    (SymmetryScorer(mode=SymmetryMode.RADIAL), 0.5),
 ]
 
 
@@ -77,7 +81,7 @@ for generation_num in range(1, MAX_GENERATIONS + 1):
     for i, ui in enumerate(population):
         total_score = 0
 
-        score_detail: dict[str, int | float] = {
+        score_detail: dict[str, float] = {
             "# Generation": generation_num,
             "# Individual": i + 1,
         }
@@ -125,6 +129,7 @@ for generation_num in range(1, MAX_GENERATIONS + 1):
     new_population = []
     # Perform roulette wheel selection
     fitness_sum = fitness_scores.sum()
+
     if fitness_sum == 0:
         probs = np.ones_like(fitness_scores) / len(fitness_scores)
     else:

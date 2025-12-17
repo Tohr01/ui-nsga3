@@ -1,7 +1,7 @@
 from pathlib import Path
 import string
 from genetic.ui import UserInterface
-from constants import CANVAS_HEIGHT, CANVAS_WIDTH
+from constants import CANVAS_HEIGHT_PX, CANVAS_WIDTH_PX
 
 
 HTML_TEMPLATE = string.Template("""
@@ -53,8 +53,8 @@ class HTMLRenderer:
         with open(output_path, "w") as f:
             f.write(
                 HTML_TEMPLATE.substitute(
-                    canvas_height=CANVAS_HEIGHT,
-                    canvas_width=CANVAS_WIDTH,
+                    canvas_height=CANVAS_HEIGHT_PX,
+                    canvas_width=CANVAS_WIDTH_PX,
                     ui_elements=ui_elements_html,
                 )
             )

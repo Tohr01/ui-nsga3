@@ -1,12 +1,13 @@
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
+from constants import CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM
 from math import sqrt
 
 
 class OutOfBoundsScorer(Scorer):
     def _distance_to_canvas(self, x: float, y: float) -> float:
-        dx = max(-x, 0, x - 1)
-        dy = max(-y, 0, y - 1)
+        dx = max(-x, 0, x - CANVAS_WIDTH_NORM)
+        dy = max(-y, 0, y - CANVAS_HEIGHT_NORM)
         return sqrt(dx**2 + dy**2)
 
     def score(self, ui: UserInterface) -> float:

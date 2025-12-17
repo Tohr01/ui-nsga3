@@ -11,6 +11,7 @@ from io import BytesIO
 import base64
 
 from ui.renderer import HTMLRenderer
+from ui.util import horizontal_canvas_norm_to_pct, vertical_canvas_norm_to_pct
 
 _base64_img_caches = {}
 
@@ -65,11 +66,15 @@ class ScaledImageView(UIElement):
         return self.position.mutatable_gene_count() + 1
 
     def to_html_element(self) -> str:
+        x = horizontal_canvas_norm_to_pct(self.position.x)
+        width = vertical_canvas_norm_to_pct(self.size.width)
+        y = vertical_canvas_norm_to_pct(self.position.y)
+        height = vertical_canvas_norm_to_pct(self.size.height)
         styles = {
-            "left": f"{self.position.x * 100}%",
-            "top": f"{self.position.y * 100}%",
-            "width": f"{self.size.width * 100}px",
-            "height": f"{self.size.height * 100}px",
+            "left": f"{x}%",
+            "top": f"{y}%",
+            "width": f"{width}px",
+            "height": f"{height}px",
         }
         img_id = id(self.image)
         if img_id in _base64_img_caches:

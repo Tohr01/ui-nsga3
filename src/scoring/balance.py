@@ -1,3 +1,4 @@
+from constants import CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
 from math import sqrt
@@ -11,8 +12,8 @@ class BalanceScorer(Scorer):
     """
 
     def score(self, ui: UserInterface) -> float:
-        x_center = 0.5
-        y_center = 0.5
+        x_center = CANVAS_WIDTH_NORM / 2
+        y_center = CANVAS_HEIGHT_NORM / 2
         wl, wr, wt, wb = 0, 0, 0, 0
         for element in ui.elements:
             pos = element.position

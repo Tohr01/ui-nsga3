@@ -1,8 +1,8 @@
 from enum import Enum
+from constants import CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
 import numpy as np
-from math import sqrt
 
 
 class SymmetryMode(Enum):
@@ -24,8 +24,8 @@ class SymmetryScorer(Scorer):
         self.mode = mode
 
     def score(self, ui: UserInterface) -> float:
-        x_c = 0.5
-        y_c = 0.5
+        x_center = CANVAS_WIDTH_NORM / 2
+        y_center = CANVAS_HEIGHT_NORM / 2
         g_ul = [0.0, 0.0, 0.0, 0.0]
         g_ur = [0.0, 0.0, 0.0, 0.0]
         g_ll = [0.0, 0.0, 0.0, 0.0]
@@ -36,19 +36,19 @@ class SymmetryScorer(Scorer):
             size = element.size
             x_center_elem = pos.x + size.width / 2
             y_center_elem = pos.y + size.height / 2
-            x_diff = abs(x_center_elem - x_c)
-            y_diff = abs(y_center_elem - y_c)
+            x_diff = abs(x_center_elem - x_center)
+            y_diff = abs(y_center_elem - y_center)
             selected_g: list[float] = []
-            if x_center_elem < x_c and y_center_elem < y_c:
+            if x_center_elem < x_center and y_center_elem < y_center:
                 selected_g = g_ul
-            elif x_center_elem > x_c and y_center_elem < y_c:
+            elif x_center_elem > x_center and y_center_elem < y_center:
                 selected_g = g_ur
-            elif x_center_elem < x_c and y_center_elem > y_c:
+            elif x_center_elem < x_center and y_center_elem > y_center:
                 selected_g = g_ll
-            elif x_center_elem > x_c and y_center_elem > y_c:
+            elif x_center_elem > x_center and y_center_elem > y_center:
                 selected_g = g_lr
             else:
-                # NOTE:: Element is exactly in the center on at least on axis, skip it
+                # NOTE:: Element is exactly in the center on at least one axis, skip it
                 continue
             selected_g[0] = selected_g[0] + x_diff
             selected_g[1] += y_diff
@@ -63,20 +63,14 @@ class SymmetryScorer(Scorer):
         if self.mode == SymmetryMode.VERTICAL:
             g_ul_ur_diff = g_ul - g_ur
             g_ll_lr_diff = g_ll - g_lr
-            return (
-                -float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff)) / 2
-            )
+            return -float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff))
         elif self.mode == SymmetryMode.HORIZONTAL:
             g_ul_ll_diff = g_ul - g_ll
             g_ur_lr_diff = g_ur - g_lr
-            return (
-                -float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff)) / 2
-            )
+            return -float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff))
         elif self.mode == SymmetryMode.RADIAL:
             g_ul_lr_diff = g_ul - g_lr
             g_ur_ll_diff = g_ur - g_ll
-            return (
-                -float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff)) / 2
-            )
+            return -float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff))
         else:
             raise ValueError(f"Unknown symmetry mode: {self.mode}")

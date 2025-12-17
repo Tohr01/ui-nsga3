@@ -3,6 +3,7 @@ from genetic.attributes.position import Position
 from genetic.attributes.rgbcolor import RGBColor
 from genetic.attributes.size import Size
 from ui.element import UIElement
+from ui.util import horizontal_canvas_norm_to_pct, vertical_canvas_norm_to_pct
 
 
 class Button(UIElement):
@@ -46,11 +47,15 @@ class Button(UIElement):
         )
 
     def to_html_element(self) -> str:
+        x = horizontal_canvas_norm_to_pct(self.position.x)
+        width = vertical_canvas_norm_to_pct(self.size.width)
+        y = vertical_canvas_norm_to_pct(self.position.y)
+        height = vertical_canvas_norm_to_pct(self.size.height)
         styles = {
-            "left": f"{self.position.x * 100}%",
-            "top": f"{self.position.y * 100}%",
-            "width": f"{self.size.width * 100}%",
-            "height": f"{self.size.height * 100}%",
+            "left": f"{x}%",
+            "top": f"{y}%",
+            "width": f"{width}%",
+            "height": f"{height}%",
             "background-color": self.bg_color.to_html_str(),
             "color": self.text_color.to_html_str(),
             "font-size": "16px",  # TODO: make this adjustable or mutatable
