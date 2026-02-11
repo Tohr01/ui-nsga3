@@ -1,4 +1,5 @@
 from math import sqrt
+from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
 from itertools import combinations
@@ -24,11 +25,11 @@ class PaddingScorer(Scorer):
             x_distance = max(
                 0,
                 max(pos1.x, pos2.x) - min(pos1.x + size1.width, pos2.x + size2.width),
-            )
+            ) * CANVAS_ASPECT_RATIO_X
             y_distance = max(
                 0,
                 max(pos1.y, pos2.y) - min(pos1.y + size1.height, pos2.y + size2.height),
-            )
+            ) * CANVAS_ASPECT_RATIO_Y
 
             distance = sqrt(x_distance**2 + y_distance**2)
 

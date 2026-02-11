@@ -5,8 +5,8 @@ def normal_distribution_mutate(
     *,
     value: float,
     mutation_rate: float,
-    i_max: float,
     i_min: float = 0,
+    i_max: float = 1,
     mutation_range_factor: float = 6,
 ) -> float:
     """

@@ -4,7 +4,6 @@ from genetic.attributes.rgbcolor import RGBColor
 from genetic.attributes.size import Size
 from ui.element import UIElement
 from ui.renderer import HTMLRenderer
-from ui.util import horizontal_canvas_norm_to_pct, vertical_canvas_norm_to_pct
 
 
 class Box(UIElement):
@@ -39,15 +38,13 @@ class Box(UIElement):
         )
 
     def to_html_element(self) -> str:
-        x = horizontal_canvas_norm_to_pct(self.position.x)
-        width = horizontal_canvas_norm_to_pct(self.size.width)
-        y = vertical_canvas_norm_to_pct(self.position.y)
-        height = vertical_canvas_norm_to_pct(self.size.height)
+        x, y = self.position.get_xy()
+        w, h = self.size.get_wh()
         styles = {
-            "left": f"{x}%",
-            "top": f"{y}%",
-            "width": f"{width}%",
-            "height": f"{height}%",
+            "left": f"{x * 100}%",
+            "top": f"{y * 100}%",
+            "width": f"{w * 100}%",
+            "height": f"{h * 100}%",
             "background-color": self.bg_color.to_html_str(),
         }
         return HTMLRenderer.get_styled_element("div", styles)

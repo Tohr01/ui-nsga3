@@ -1,5 +1,5 @@
 from enum import Enum
-from constants import CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM
+from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
 import numpy as np
@@ -23,9 +23,11 @@ class SymmetryScorer(Scorer):
     def __init__(self, mode: SymmetryMode = SymmetryMode.VERTICAL):
         self.mode = mode
 
+    # FIX: MODE DOESN'T SEEM TO ALIGN CORRECTLY WITH THE PAPER?
+    # DOUBLE CHECK IMPLMENTATION AND PAPER
     def score(self, ui: UserInterface) -> float:
-        x_center = CANVAS_WIDTH_NORM / 2
-        y_center = CANVAS_HEIGHT_NORM / 2
+        x_center = 0.5
+        y_center = 0.5
         g_ul = [0.0, 0.0, 0.0, 0.0]
         g_ur = [0.0, 0.0, 0.0, 0.0]
         g_ll = [0.0, 0.0, 0.0, 0.0]
@@ -38,22 +40,24 @@ class SymmetryScorer(Scorer):
             y_center_elem = pos.y + size.height / 2
             x_diff = abs(x_center_elem - x_center)
             y_diff = abs(y_center_elem - y_center)
+
+            is_right = x_center_elem >= x_center
+            is_bottom = y_center_elem >= y_center
+
             selected_g: list[float] = []
-            if x_center_elem < x_center and y_center_elem < y_center:
+            if not is_right and not is_bottom:
                 selected_g = g_ul
-            elif x_center_elem > x_center and y_center_elem < y_center:
+            elif is_right and not is_bottom:
                 selected_g = g_ur
-            elif x_center_elem < x_center and y_center_elem > y_center:
+            elif not is_right and is_bottom:
                 selected_g = g_ll
-            elif x_center_elem > x_center and y_center_elem > y_center:
-                selected_g = g_lr
             else:
-                # NOTE:: Element is exactly in the center on at least one axis, skip it
-                continue
-            selected_g[0] = selected_g[0] + x_diff
-            selected_g[1] += y_diff
-            selected_g[2] += size.width
-            selected_g[3] += size.height
+                selected_g = g_lr
+
+            selected_g[0] += x_diff * CANVAS_ASPECT_RATIO_X
+            selected_g[1] += y_diff * CANVAS_ASPECT_RATIO_Y
+            selected_g[2] += size.width * CANVAS_ASPECT_RATIO_X
+            selected_g[3] += size.height * CANVAS_ASPECT_RATIO_Y
 
         g_ul = np.array(g_ul, dtype=float)
         g_ur = np.array(g_ur, dtype=float)

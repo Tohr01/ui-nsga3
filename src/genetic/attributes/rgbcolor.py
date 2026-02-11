@@ -47,5 +47,6 @@ class RGBColor(Reproducible):
     def mutatable_gene_count(self) -> int:
         return 3
 
+    # NOTE: This is not in a overridden method of reproducible
     def to_html_str(self) -> str:
         return f"rgb({self.r}, {self.g}, {self.b})"

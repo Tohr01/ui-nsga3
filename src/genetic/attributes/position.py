@@ -1,6 +1,5 @@
 from typing import Optional
 from numpy import random
-from constants import CANVAS_WIDTH_NORM, CANVAS_HEIGHT_NORM
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from genetic.reproducible import Reproducible
@@ -15,8 +14,11 @@ class Position(Reproducible):
         x: Optional[float] = None,
         y: Optional[float] = None,
     ):
-        self.x = x if x is not None else random.uniform(0, CANVAS_WIDTH_NORM)
-        self.y = y if y is not None else random.uniform(0, CANVAS_HEIGHT_NORM)
+        self.x, self.y = (self._init_dimension(d) for d in (x, y))
+
+    def _init_dimension(self, dimension: Optional[float]) -> float:
+        return dimension if dimension is not None else random.uniform(0, 1)
+        
 
     @staticmethod
     def crossover(i1: "Position", i2: "Position") -> "Position":
@@ -33,11 +35,14 @@ class Position(Reproducible):
 
     def mutate(self, mutation_rate: float):
         self.x = normal_distribution_mutate(
-            value=self.x, mutation_rate=mutation_rate, i_max=CANVAS_WIDTH_NORM
+            value=self.x, mutation_rate=mutation_rate
         )
         self.y = normal_distribution_mutate(
-            value=self.y, mutation_rate=mutation_rate, i_max=CANVAS_WIDTH_NORM
+            value=self.y, mutation_rate=mutation_rate
         )
 
     def mutatable_gene_count(self) -> int:
         return 2
+
+    def get_xy(self) -> tuple[float, float]:
+        return self.x, self.y

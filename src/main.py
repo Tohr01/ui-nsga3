@@ -1,5 +1,4 @@
 from typing import Type
-from PIL import Image
 import numpy as np
 import random
 import csv
@@ -7,8 +6,6 @@ import csv
 from constants import (
     FITNESS_MAX_STAGNATION_GENERATIONS,
     MAX_GENERATIONS,
-    CANVAS_HEIGHT_NORM,
-    CANVAS_WIDTH_NORM,
     OUTPUT_DIR,
     POPULATION_SIZE,
 )
@@ -19,13 +16,9 @@ from scoring.outofbounds import OutOfBoundsScorer
 from scoring.padding import PaddingScorer
 from scoring.symmetry import SymmetryMode, SymmetryScorer
 from ui.components.box import Box
-from ui.components.image import ScaledImageView
 from ui.element import UIElement
 from ui.renderer import HTMLRenderer
 from util import init_output_dir
-
-
-print(CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM)
 
 random.seed(42)
 np.random.seed(42)
@@ -36,22 +29,18 @@ init_output_dir()
 # tuples of class and a initializer dict
 interface_base_structure: list[tuple[Type[UIElement], dict]] = [
     (Box, {}),
-    (Box, {}),
-    (Box, {}),
-    (Box, {}),
-    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
-    # (ScaledImageView, {"image": Image.open("images/mountains.jpg")}),
+   (Box, {}),
+   (Box, {}),
+   (Box, {}),
 ]
 
 # Scorers to evaluate UIs with weights
 scorers = [
-    (OutOfBoundsScorer(), 1),
-    (BalanceScorer(), 1),
-    (PaddingScorer(), 1),
-    (EquilibriumScorer(), 1),
-    (SymmetryScorer(mode=SymmetryMode.RADIAL), 0.5),
+   (OutOfBoundsScorer(), 1),
+   (BalanceScorer(), 1),
+   (PaddingScorer(), 1),
+   (EquilibriumScorer(), 1),
+   (SymmetryScorer(mode=SymmetryMode.VERTICAL), 0.5),
 ]
 
 

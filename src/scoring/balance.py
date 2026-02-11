@@ -1,4 +1,4 @@
-from constants import CANVAS_HEIGHT_NORM, CANVAS_WIDTH_NORM
+from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
 from genetic.ui import UserInterface
 from scoring.scorer import Scorer
 from math import sqrt
@@ -12,24 +12,28 @@ class BalanceScorer(Scorer):
     """
 
     def score(self, ui: UserInterface) -> float:
-        x_center = CANVAS_WIDTH_NORM / 2
-        y_center = CANVAS_HEIGHT_NORM / 2
+        x_center = 0.5
+        y_center = 0.5
         wl, wr, wt, wb = 0, 0, 0, 0
         for element in ui.elements:
             pos = element.position
             size = element.size
-            area = size.area()
-            x_center_elem = pos.x + size.width / 2
-            y_center_elem = pos.y + size.height / 2
-            if x_center_elem < x_center:
-                wl += area * (x_center - x_center_elem)
-            elif x_center_elem > x_center:
-                wr += area * (x_center_elem - x_center)
 
-            if y_center_elem < y_center:
-                wt += area * (y_center - y_center_elem)
-            elif y_center_elem > y_center:
-                wb += area * (y_center_elem - y_center)
+            area = size.visual_area()
+            cx = pos.x + size.width / 2
+            cy = pos.y + size.height / 2
+
+            dx = abs(x_center - cx) * CANVAS_ASPECT_RATIO_X
+            dy = abs(y_center - cy) * CANVAS_ASPECT_RATIO_Y
+            if cx < x_center:
+                wl += area * dx
+            elif cx > x_center:
+                wr += area * dx
+
+            if cy < y_center:
+                wt += area * dy
+            elif cy > y_center:
+                wb += area * dy
 
         x_balance = wl - wr
         y_balance = wt - wb
