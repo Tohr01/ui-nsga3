@@ -1,7 +1,8 @@
 from typing import Type
+import json
 import numpy as np
 import random
-import csv
+from collections import defaultdict
 
 from constants import (
     FITNESS_MAX_STAGNATION_GENERATIONS,
@@ -28,7 +29,6 @@ init_output_dir()
 # Structure of elements that should be optimized
 # tuples of class and a initializer dict
 interface_base_structure: list[tuple[Type[UIElement], dict]] = [
-    (Box, {}),
    (Box, {}),
    (Box, {}),
    (Box, {}),
@@ -40,7 +40,7 @@ scorers = [
    (BalanceScorer(), 1),
    (PaddingScorer(), 1),
    (EquilibriumScorer(), 1),
-   (SymmetryScorer(mode=SymmetryMode.VERTICAL), 0.5),
+   (SymmetryScorer(mode=SymmetryMode.HORIZONTAL), 0.5),
 ]
 
 
@@ -56,33 +56,30 @@ for i in range(POPULATION_SIZE):
     ui = UserInterface(elements)
     population.append(ui)
 
-score_details: list[dict] = []
-top_fitness_scores: list[float] = []
-best_fitness = float("-inf")
+# Generation number -> individual number -> scorer name & total score -> score
+fitness_details: dict[int, dict[int, dict[str, float]]] = {}
+best_fitness = float("inf")
 stag_count = 0
 
 for generation_num in range(1, MAX_GENERATIONS + 1):
     print(f"Processing generation {generation_num}...")
-    # Score all UIs
+    # Score all UIs; lower is better
     fitness_scores = []
-    gen_min_fitness = float("inf")
-    gen_max_fitness = float("-inf")
+    gen_best_fitness = float("inf")
+    gen_worst_fitness = float("-inf")
+
+    fitness_details[generation_num] = defaultdict(dict)
+
     for i, ui in enumerate(population):
         total_score = 0
-
-        score_detail: dict[str, float] = {
-            "# Generation": generation_num,
-            "# Individual": i + 1,
-        }
-
         for scorer, weight in scorers:
             score = scorer.score(ui) * weight
-            score_detail[scorer.__class__.__name__] = score
+            fitness_details[generation_num][i+1][scorer.__class__.__name__] = score
             total_score += score
-        score_detail["Score"] = total_score
-        score_details.append(score_detail)
-        gen_min_fitness = min(gen_min_fitness, total_score)
-        gen_max_fitness = max(gen_max_fitness, total_score)
+
+        fitness_details[generation_num][i+1]["total_score"] = total_score
+        gen_best_fitness = min(gen_best_fitness, total_score)
+        gen_worst_fitness = max(gen_worst_fitness, total_score)
 
         fitness_scores.append(total_score)
         HTMLRenderer.ui_to_html(
@@ -90,39 +87,46 @@ for generation_num in range(1, MAX_GENERATIONS + 1):
             output_path=OUTPUT_DIR / f"generation-{generation_num}/{i + 1}.html",
         )
     fitness_scores = np.array(fitness_scores, dtype=float)
-    top_fitness_scores.append(gen_max_fitness)
 
-    if gen_max_fitness <= best_fitness:
+    if gen_best_fitness >= best_fitness:
+        # We have not seen improvement in fitness, increase stagnation count
         stag_count += 1
     else:
-        best_fitness = gen_max_fitness
+        best_fitness = gen_best_fitness
         print(
-            f"New best fitness: {best_fitness} in generation {generation_num} on individual {np.argmax(fitness_scores) + 1}"
+            f"New best fitness: {best_fitness} in generation {generation_num} on individual {np.argmin(fitness_scores) + 1}"
         )
+        # We have seen improvement in fitness, reset stagnation count
         stag_count = 0
 
     # Break if we have hit a fitness plateau
     if stag_count == FITNESS_MAX_STAGNATION_GENERATIONS:
         print(
-            f"Fitness has not improved in {FITNESS_MAX_STAGNATION_GENERATIONS} generations. Stopping."
+            f"Fitness has not improved in {FITNESS_MAX_STAGNATION_GENERATIONS} generations. Stopping..."
         )
         break
 
-    # Shift scores to be non-negative
-    if gen_min_fitness < 0:
-        fitness_scores += abs(gen_min_fitness)
+    # TODO: Maybe perform an elite selection and tournament selection
 
-    # TODO: Maybe perform an elite selection
+    inverted_fitness_scores = np.array(fitness_scores, dtype=float)
+
+    # Shift scores to be non-negative
+    if gen_best_fitness < 0:
+        inverted_fitness_scores -= gen_best_fitness
+
+    # Invert fitness scores for roulette wheel selection (now higher is better)
+    inverted_fitness_scores = inverted_fitness_scores.max() - fitness_scores
+
+    # Perform roulette wheel selection
+    inverted_fitness_sum = inverted_fitness_scores.sum()
+    print(fitness_scores, inverted_fitness_scores)
+    if inverted_fitness_sum == 0:
+        probs = np.ones_like(inverted_fitness_scores) / len(inverted_fitness_scores)
+    else:
+        probs = inverted_fitness_scores / inverted_fitness_scores
 
     # Create new population
     new_population = []
-    # Perform roulette wheel selection
-    fitness_sum = fitness_scores.sum()
-
-    if fitness_sum == 0:
-        probs = np.ones_like(fitness_scores) / len(fitness_scores)
-    else:
-        probs = fitness_scores / fitness_sum
 
     while len(new_population) < POPULATION_SIZE:
         # Select the best UIs
@@ -136,14 +140,6 @@ for generation_num in range(1, MAX_GENERATIONS + 1):
 
 print(f"Best fitness score: {best_fitness}")
 
-# Write scores csv
-with open(OUTPUT_DIR / "scores.csv", mode="w", newline="") as score_file:
-    fieldnames = [
-        "# Generation",
-        "# Individual",
-        "Score",
-        *[scorer.__class__.__name__ for scorer, _weight in scorers],
-    ]
-    writer = csv.DictWriter(score_file, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(score_details)
+# Write json with fitness fitness_details
+with open(OUTPUT_DIR / "fitness_details.json", "w") as f:
+    json.dump(fitness_details, f, indent=4)

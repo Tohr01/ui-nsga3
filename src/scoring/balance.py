@@ -37,4 +37,6 @@ class BalanceScorer(Scorer):
 
         x_balance = wl - wr
         y_balance = wt - wb
-        return -sqrt(x_balance**2 + y_balance**2)
+        
+        # Return the distance from perfect balance (0, 0) as penalty
+        return sqrt(x_balance**2 + y_balance**2)

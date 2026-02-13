@@ -37,5 +37,7 @@ class EquilibriumScorer(Scorer):
         em_x = (x_center - x_0) * CANVAS_ASPECT_RATIO_X
         em_y = (y_center - y_0) * CANVAS_ASPECT_RATIO_Y
 
-        # TODO: Maybe return -(em_x + em_y) / 2
-        return -sqrt(em_x**2 + em_y**2)  
+        # TODO: Maybe return (em_x + em_y) / 2
+
+        # Return the distance from perfect equilibrium (0, 0) as penalty
+        return sqrt(em_x**2 + em_y**2)  

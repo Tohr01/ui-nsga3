@@ -13,7 +13,7 @@ class PaddingScorer(Scorer):
     PADDING_THRESHOLD = 0.15
 
     def score(self, ui: UserInterface) -> float:
-        score = 0
+        penalty = 0
 
         for e1, e2 in combinations(ui.elements, 2):
             pos1 = e1.position
@@ -35,6 +35,6 @@ class PaddingScorer(Scorer):
 
             # Elements are to close
             if distance < self.PADDING_THRESHOLD:
-                score -= self.PADDING_THRESHOLD - distance
+                penalty = self.PADDING_THRESHOLD - distance
 
-        return score
+        return penalty

@@ -67,14 +67,14 @@ class SymmetryScorer(Scorer):
         if self.mode == SymmetryMode.VERTICAL:
             g_ul_ur_diff = g_ul - g_ur
             g_ll_lr_diff = g_ll - g_lr
-            return -float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff))
+            return float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff))
         elif self.mode == SymmetryMode.HORIZONTAL:
             g_ul_ll_diff = g_ul - g_ll
             g_ur_lr_diff = g_ur - g_lr
-            return -float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff))
+            return float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff))
         elif self.mode == SymmetryMode.RADIAL:
             g_ul_lr_diff = g_ul - g_lr
             g_ur_ll_diff = g_ur - g_ll
-            return -float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff))
+            return float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff))
         else:
             raise ValueError(f"Unknown symmetry mode: {self.mode}")

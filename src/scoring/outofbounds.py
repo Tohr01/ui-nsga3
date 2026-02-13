@@ -11,7 +11,7 @@ class OutOfBoundsScorer(Scorer):
         return sqrt(dx**2 + dy**2)
 
     def score(self, ui: UserInterface) -> float:
-        score = 0
+        penalty = 0
         for element in ui.elements:
             x, y = element.position.get_xy()
             w, h = element.size.get_wh()
@@ -22,8 +22,8 @@ class OutOfBoundsScorer(Scorer):
                 x + w, y + h
             )
             # TODO: Reward if some edge is on the canvas?
-            score -= top_left + top_right + bottom_left + bottom_right
-        return score
+            penalty += top_left + top_right + bottom_left + bottom_right
+        return penalty
 
     # def score(self, ui: UserInterface) -> float:
     #     total_penalty = 0
