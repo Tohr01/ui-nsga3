@@ -14,7 +14,7 @@ class Size(Reproducible):
         self.width, self.height = (self._init_dimension(d) for d in (width, height))
 
     def _init_dimension(self, dimension: Optional[float]) -> float:
-        return max(dimension, 0)if dimension is not None else random.uniform(0, 1)
+        return max(dimension, 0) if dimension is not None else random.uniform(0, 1)
 
     @staticmethod
     def crossover(i1: "Size", i2: "Size") -> "Size":
@@ -28,15 +28,11 @@ class Size(Reproducible):
     def mutate(self, mutation_rate: float):
         self.width = max(
             0,
-            normal_distribution_mutate(
-                value=self.width, mutation_rate=mutation_rate
-            ),
+            normal_distribution_mutate(value=self.width, mutation_rate=mutation_rate),
         )
         self.height = max(
             0,
-            normal_distribution_mutate(
-                value=self.height, mutation_rate=mutation_rate
-            ),
+            normal_distribution_mutate(value=self.height, mutation_rate=mutation_rate),
         )
 
     def mutatable_gene_count(self) -> int:

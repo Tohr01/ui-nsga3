@@ -18,7 +18,6 @@ class Position(Reproducible):
 
     def _init_dimension(self, dimension: Optional[float]) -> float:
         return dimension if dimension is not None else random.uniform(0, 1)
-        
 
     @staticmethod
     def crossover(i1: "Position", i2: "Position") -> "Position":
@@ -34,12 +33,8 @@ class Position(Reproducible):
         return Position(new_x, new_y)
 
     def mutate(self, mutation_rate: float):
-        self.x = normal_distribution_mutate(
-            value=self.x, mutation_rate=mutation_rate
-        )
-        self.y = normal_distribution_mutate(
-            value=self.y, mutation_rate=mutation_rate
-        )
+        self.x = normal_distribution_mutate(value=self.x, mutation_rate=mutation_rate)
+        self.y = normal_distribution_mutate(value=self.y, mutation_rate=mutation_rate)
 
     def mutatable_gene_count(self) -> int:
         return 2

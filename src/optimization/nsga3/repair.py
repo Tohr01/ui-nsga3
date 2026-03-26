@@ -9,6 +9,10 @@ class CanvasBoundsRepair(Repair):
                 element.size.width = max(0, min(element.size.width, 1))
                 element.size.height = max(0, min(element.size.height, 1))
                 # Clamp position
-                element.position.x = max(0, min(element.position.x, 1 - element.size.width))
-                element.position.y = max(0, min(element.position.y, 1 - element.size.height))
+                element.position.x = max(
+                    0, min(element.position.x, 1 - element.size.width)
+                )
+                element.position.y = max(
+                    0, min(element.position.y, 1 - element.size.height)
+                )
         return X

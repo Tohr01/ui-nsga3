@@ -17,7 +17,8 @@ class FooterScorer(Scorer):
                 h_penalty = (0.1 - h) * container.height_aspect_ratio
                 y_optimal = 1 - h
                 y_penalty = abs(y - y_optimal) * container.height_aspect_ratio
-                penalty += sqrt(x_penalty**2 + w_penalty**2 + h_penalty**2 + y_penalty**2)
+                penalty += sqrt(
+                    x_penalty**2 + w_penalty**2 + h_penalty**2 + y_penalty**2
+                )
 
         return penalty
-
