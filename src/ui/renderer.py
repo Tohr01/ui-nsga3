@@ -1,8 +1,9 @@
-from pathlib import Path
 import string
-from genetic.ui import UserInterface
-from constants import CANVAS_HEIGHT_PX, CANVAS_WIDTH_PX
+from pathlib import Path
 
+from constants import CANVAS_HEIGHT_PX, CANVAS_WIDTH_PX
+from genetic.ui import UserInterface
+from ui.container import Container
 
 HTML_TEMPLATE = string.Template("""
 <!doctype html>
@@ -49,6 +50,26 @@ class HTMLRenderer:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         ui_elements_html = "".join(
             [element.to_html_element() for element in ui.elements]
+        )
+        with open(output_path, "w") as f:
+            f.write(
+                HTML_TEMPLATE.substitute(
+                    canvas_height=CANVAS_HEIGHT_PX,
+                    canvas_width=CANVAS_WIDTH_PX,
+                    ui_elements=ui_elements_html,
+                )
+            )
+
+    @staticmethod
+    def write_container_to_html(container: Container, output_path: Path):
+        """
+        Render a Container to an HTML element.
+        """
+        # TODO: Todo recursive rendering of nested containers
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        ui_elements_html = "".join(
+            [element.to_html_element() for element in container.elements]
         )
         with open(output_path, "w") as f:
             f.write(

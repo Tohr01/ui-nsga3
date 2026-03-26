@@ -1,40 +1,34 @@
-from math import sqrt
-from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
-from genetic.ui import UserInterface
-from scoring.scorer import Scorer
 from itertools import combinations
+
+from scoring.scorer import Scorer
+from ui.container import Container
 
 
 class PaddingScorer(Scorer):
-    """
-    Will penalize UIs that have elements too close to each other.
-    """
+    def __init__(self, padding: float = 0.01):
+        self.padding = padding
 
-    PADDING_THRESHOLD = 0.15
+    def score(self, container: Container) -> float:
+        total_overlap = 0.0
+        for a, b in combinations(container.elements, 2):
+            ax, ay = a.position.get_xy()
+            aw, ah = a.size.get_wh()
+            bx, by = b.position.get_xy()
+            bw, bh = b.size.get_wh()
 
-    def score(self, ui: UserInterface) -> float:
-        penalty = 0
+            # Expand each element by padding
+            ax -= self.padding
+            ay -= self.padding
+            aw += 2 * self.padding
+            ah += 2 * self.padding
+            bx -= self.padding
+            by -= self.padding
+            bw += 2 * self.padding
+            bh += 2 * self.padding
 
-        for e1, e2 in combinations(ui.elements, 2):
-            pos1 = e1.position
-            size1 = e1.size
-            pos2 = e2.position
-            size2 = e2.size
+            x_overlap = max(0.0, min(ax + aw, bx + bw) - max(ax, bx))
+            y_overlap = max(0.0, min(ay + ah, by + bh) - max(ay, by))
+            # total overlap += area of the overlap
+            total_overlap += x_overlap * y_overlap
 
-            # Calculate horizontal and vertical distances
-            x_distance = max(
-                0,
-                max(pos1.x, pos2.x) - min(pos1.x + size1.width, pos2.x + size2.width),
-            ) * CANVAS_ASPECT_RATIO_X
-            y_distance = max(
-                0,
-                max(pos1.y, pos2.y) - min(pos1.y + size1.height, pos2.y + size2.height),
-            ) * CANVAS_ASPECT_RATIO_Y
-
-            distance = sqrt(x_distance**2 + y_distance**2)
-
-            # Elements are to close
-            if distance < self.PADDING_THRESHOLD:
-                penalty = self.PADDING_THRESHOLD - distance
-
-        return penalty
+        return total_overlap  # 0.0 = feasible, > 0.0 = infeasible

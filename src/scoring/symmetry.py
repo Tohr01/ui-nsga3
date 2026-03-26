@@ -1,8 +1,9 @@
 from enum import Enum
-from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
-from genetic.ui import UserInterface
-from scoring.scorer import Scorer
+
 import numpy as np
+
+from scoring.scorer import Scorer
+from ui.container import Container
 
 
 class SymmetryMode(Enum):
@@ -13,7 +14,7 @@ class SymmetryMode(Enum):
 
 class SymmetryScorer(Scorer):
     """
-    Scores a UI based on the symmetry of its elements.
+    Scores a Container based on the symmetry of its elements.
     Forumla is based on the paper "Aesthetic Measures for Assessing Graphic Screens"
     See 3.3 https://www.researchgate.net/publication/220587460_Aesthetic_Measures_for_Assessing_Graphic_Screens
     """
@@ -25,7 +26,7 @@ class SymmetryScorer(Scorer):
 
     # FIX: MODE DOESN'T SEEM TO ALIGN CORRECTLY WITH THE PAPER?
     # DOUBLE CHECK IMPLMENTATION AND PAPER
-    def score(self, ui: UserInterface) -> float:
+    def score(self, container: Container) -> float:
         x_center = 0.5
         y_center = 0.5
         g_ul = [0.0, 0.0, 0.0, 0.0]
@@ -33,7 +34,7 @@ class SymmetryScorer(Scorer):
         g_ll = [0.0, 0.0, 0.0, 0.0]
         g_lr = [0.0, 0.0, 0.0, 0.0]
 
-        for element in ui.elements:
+        for element in container.elements:
             pos = element.position
             size = element.size
             x_center_elem = pos.x + size.width / 2
@@ -54,10 +55,10 @@ class SymmetryScorer(Scorer):
             else:
                 selected_g = g_lr
 
-            selected_g[0] += x_diff * CANVAS_ASPECT_RATIO_X
-            selected_g[1] += y_diff * CANVAS_ASPECT_RATIO_Y
-            selected_g[2] += size.width * CANVAS_ASPECT_RATIO_X
-            selected_g[3] += size.height * CANVAS_ASPECT_RATIO_Y
+            selected_g[0] += x_diff * container.width_aspect_ratio
+            selected_g[1] += y_diff * container.height_aspect_ratio
+            selected_g[2] += size.width * container.width_aspect_ratio
+            selected_g[3] += size.height * container.height_aspect_ratio
 
         g_ul = np.array(g_ul, dtype=float)
         g_ur = np.array(g_ur, dtype=float)

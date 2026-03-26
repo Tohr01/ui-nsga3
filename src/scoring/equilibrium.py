@@ -1,24 +1,24 @@
-from constants import CANVAS_ASPECT_RATIO_X, CANVAS_ASPECT_RATIO_Y
-from genetic.ui import UserInterface
-from scoring.scorer import Scorer
 from math import sqrt
+
+from scoring.scorer import Scorer
+from ui.container import Container
 
 
 class EquilibriumScorer(Scorer):
     """
-    Scores a UI based on the equilibrium of its elements.
+    Scores a Container based on the equilibrium of its elements.
     Forumla is based on the paper "Aesthetic Measures for Assessing Graphic Screens"
     See 3.2 https://www.researchgate.net/publication/220587460_Aesthetic_Measures_for_Assessing_Graphic_Screens
     """
 
-    def score(self, ui: UserInterface) -> float:
+    def score(self, container: Container) -> float:
         x_center = 0.5
         y_center = 0.5
 
         weighted_x_sum = 0
         weighted_y_sum = 0
         total_area = 0
-        for element in ui.elements:
+        for element in container.elements:
             x, y = element.position.get_xy()
             w, h = element.size.get_wh()
             area = element.size.visual_area()
@@ -34,10 +34,10 @@ class EquilibriumScorer(Scorer):
         x_0 = weighted_x_sum / total_area if total_area != 0 else x_center
         y_0 = weighted_y_sum / total_area if total_area != 0 else y_center
 
-        em_x = (x_center - x_0) * CANVAS_ASPECT_RATIO_X
-        em_y = (y_center - y_0) * CANVAS_ASPECT_RATIO_Y
+        em_x = (x_center - x_0) * container.width_aspect_ratio
+        em_y = (y_center - y_0) * container.height_aspect_ratio
 
         # TODO: Maybe return (em_x + em_y) / 2
 
         # Return the distance from perfect equilibrium (0, 0) as penalty
-        return sqrt(em_x**2 + em_y**2)  
+        return sqrt(em_x**2 + em_y**2)

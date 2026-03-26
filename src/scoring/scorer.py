@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 
-from genetic.ui import UserInterface
+from ui.container import Container
 
 
 class Scorer(ABC):
     @abstractmethod
-    def score(self, ui: UserInterface) -> float:
+    def score(self, container: Container) -> float:
         """
-        Scores a UI based on some criteria. Higher score is worse.
-        :param ui: The UserInterface to score
+        Scores a Container based on some criteria. Higher score is worse.
+        :param container: The UserInterface to score
         :return: A penalty score
         """
-        raise NotImplementedError("Score method must be implemented by subclasses.")
+        pass
