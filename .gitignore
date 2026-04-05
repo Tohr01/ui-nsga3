@@ -1,4 +1,7 @@
 __pycache__
+.ruff_cache
+.venv
 output/
 .DS_Store
 todo.md
+best_container_*.html

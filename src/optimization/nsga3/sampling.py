@@ -24,9 +24,12 @@ class ContainerSampling(Sampling):
     def _do(self, problem, n_samples, *args, random_state=None, **kwargs):
         population = []
         for _ in range(n_samples):
-            container = self.blueprint.get_new_container(
-                self.container_width_px, self.container_height_px
-            )
+            container = self.get_single_container()
             population.append(container)
 
         return np.array(population, dtype=Container).reshape(n_samples, 1)
+
+    def get_single_container(self) -> Container:
+        return self.blueprint.get_new_container(
+            self.container_width_px, self.container_height_px
+        )

@@ -3,7 +3,7 @@ from ui.element import UIElement
 
 
 class Container(Reproducible):
-    container_id: int
+    blueprint_id: str
     # TODO: Maybe use relative units instantly
     width_px: float
     width_aspect_ratio: float
@@ -14,13 +14,13 @@ class Container(Reproducible):
 
     def __init__(
         self,
-        container_id: int,
+        blueprint_id: str,
         width_px: float,
         height_px: float,
         label: str,
         elements: list[UIElement],
     ):
-        self.container_id = container_id
+        self.blueprint_id = blueprint_id
         self.width_px = width_px
         self.height_px = height_px
         # TODO: Maybe do not calculate always on init but precalulate in sampling
@@ -32,8 +32,8 @@ class Container(Reproducible):
     @staticmethod
     def crossover(i1: "Container", i2: "Container") -> "Container":
         new_elements: list[UIElement] = []
-        assert i1.container_id == i2.container_id, (
-            "Crossover can only be performed on Containers with the same container_id."
+        assert i1.blueprint_id == i2.blueprint_id, (
+            "Crossover can only be performed on Containers with the same blueprint_id"
         )
         for element1, element2 in zip(i1.elements, i2.elements):
             assert type(element1) is type(element2), (
@@ -41,7 +41,7 @@ class Container(Reproducible):
             )
             new_elements.append(type(element1).crossover(element1, element2))
         return Container(
-            i1.container_id, i1.width_px, i1.height_px, i1.label, new_elements
+            i1.blueprint_id, i1.width_px, i1.height_px, i1.label, new_elements
         )
 
     def mutate(self, mutation_rate: float):
@@ -53,6 +53,6 @@ class Container(Reproducible):
 
     def __repr__(self) -> str:
         elements_str = "\n".join(type(element).__name__ for element in self.elements)
-        return f"""--- Container "{self.label}" - {self.container_id} ---
+        return f"""--- Container "{self.label}" - {self.blueprint_id} ---
 {elements_str}
         """

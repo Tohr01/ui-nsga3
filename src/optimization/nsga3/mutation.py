@@ -15,7 +15,6 @@ class ContainerMutation(Mutation):
             # Deepcopy before inplace modification
             container = X[i, 0]
             copied_container = copy.deepcopy(container)
-            # PERF: Maybe optimize by making mutation return a new container instead of mutating in place
             copied_container.mutate(self.mutation_rate)
             # Set mutated container back to X
             X[i, 0] = copied_container

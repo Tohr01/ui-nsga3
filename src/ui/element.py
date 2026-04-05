@@ -26,3 +26,16 @@ class UIElement(Reproducible, ABC):
         raise NotImplementedError(
             "to_html_element method must be implemented by subclass."
         )
+
+    def clamp_to_canvas(self):
+        """
+        Clamps the position and size of the element to ensure it fits within the canvas.
+        1. Clamp size first
+        2. Clamp position based on the clamped size
+        """
+        # Clamp size
+        self.size.width = max(0, min(self.size.width, 1))
+        self.size.height = max(0, min(self.size.height, 1))
+        # Clamp position
+        self.position.x = max(0, min(self.position.x, 1 - self.size.width))
+        self.position.y = max(0, min(self.position.y, 1 - self.size.height))

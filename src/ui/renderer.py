@@ -74,8 +74,8 @@ class HTMLRenderer:
         with open(output_path, "w") as f:
             f.write(
                 HTML_TEMPLATE.substitute(
-                    canvas_height=CANVAS_HEIGHT_PX,
-                    canvas_width=CANVAS_WIDTH_PX,
+                    canvas_height=container.height_px,
+                    canvas_width=container.width_px,
                     ui_elements=ui_elements_html,
                 )
             )
