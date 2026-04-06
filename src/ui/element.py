@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
+from numpy import clip
+
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.reproducible import Reproducible
@@ -34,8 +36,8 @@ class UIElement(Reproducible, ABC):
         2. Clamp position based on the clamped size
         """
         # Clamp size
-        self.size.width = max(0, min(self.size.width, 1))
-        self.size.height = max(0, min(self.size.height, 1))
+        self.size.width = clip(self.size.width, 0, 1)
+        self.size.height = clip(self.size.height, 0, 1)
         # Clamp position
-        self.position.x = max(0, min(self.position.x, 1 - self.size.width))
-        self.position.y = max(0, min(self.position.y, 1 - self.size.height))
+        self.position.x = clip(self.position.x, 0, 1 - self.size.width)
+        self.position.y = clip(self.position.y, 0, 1 - self.size.height)
