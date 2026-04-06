@@ -1,5 +1,7 @@
 from typing import Optional
+
 from numpy import random
+
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from genetic.reproducible import Reproducible
@@ -22,11 +24,11 @@ class Position(Reproducible):
     @staticmethod
     def crossover(i1: "Position", i2: "Position") -> "Position":
         """
-        Crossover two Rectangles to produce a new Rectangle.
+        Crossover two Positions to produce a new Position.
         We perform an intermediate recombination of x and y.
-        :param i1: First Rectangle
-        :param i2: Second Rectangle
-        :return: New Rectangle
+        :param i1: First Position
+        :param i2: Second Position
+        :return: New Position
         """
         new_x = intermediate_recombination(i1.x, i2.x)
         new_y = intermediate_recombination(i1.y, i2.y)
