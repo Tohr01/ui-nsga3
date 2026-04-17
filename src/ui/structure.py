@@ -2,11 +2,15 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Type
 
+from scoring.balance import BalanceScorer
 from scoring.content import ContentScorer
+from scoring.debug.target_font_size import TargetFontSizeScorer
+from scoring.equilibrium import EquilibriumScorer
 from scoring.footer import FooterScorer
 from scoring.header import HeaderScorer
 from scoring.scorer import Scorer
 from ui.components.placeholder_container import PlaceholderContainer
+from ui.components.singleline_text import SingleLineText
 from ui.container import Container
 from ui.element import UIElement
 
@@ -70,7 +74,19 @@ interface_blueprint = RootBlueprint(
     elements=[
         BlueprintContainer(label="Header", elements=[], scorers=[]),
         BlueprintContainer(label="Content", elements=[], scorers=[]),
-        BlueprintContainer(label="Footer", elements=[], scorers=[]),
+        BlueprintContainer(
+            label="Footer",
+            elements=[
+                (SingleLineText, {"text": "Impressum"}),
+                (SingleLineText, {"text": "Datenschutz"}),
+                (SingleLineText, {"text": "AGBs"}),
+            ],
+            scorers=[
+                (TargetFontSizeScorer, 1.0),
+                (BalanceScorer, 1.0),
+                (EquilibriumScorer, 1.0),
+            ],
+        ),
     ],
     scorers=[(HeaderScorer, 1.0), (FooterScorer, 1.0), (ContentScorer, 1.0)],
 )

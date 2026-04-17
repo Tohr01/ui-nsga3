@@ -1,23 +1,25 @@
 import random
-from pathlib import Path
 
 import numpy as np
 from pymoo.algorithms.moo.nsga3 import NSGA3
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
+from constants import DEFAULT_FONT_FAMILY, OUTPUT_DIR
 from optimization.nsga3.crossover import ContainerCrossover
 from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.sampling import ContainerSampling
 from ui.components.placeholder_container import PlaceholderContainer
+from ui.components.singleline_text import SingleLineText
 from ui.container import Container
 from ui.renderer import HTMLRenderer
 from ui.structure import (
     BlueprintContainer,
     interface_blueprint,
 )
+from ui.text_measure import TextMeasure
 
 SEED = 42
 
@@ -31,8 +33,19 @@ optimization_queue: list[tuple[float, float, BlueprintContainer]] = [
 optimized_containers: dict[str, Container] = {}
 
 
+text_measure = TextMeasure.get_instance()
 while optimization_queue:
     width_px, height_px, current_blueprint = optimization_queue.pop(0)
+
+    # Set canvas dimensions for text measurement
+    text_measure.set_canvas_dim(width_px, height_px)
+    # If we have a text like element in the blueprint precache some font sizes to speed up optimization
+    for element_type, element_args in current_blueprint.flattend_elements:
+        if element_type in [SingleLineText]:
+            text_measure.precache_font_sizes(
+                text=element_args["text"],
+                font_family=element_args.get("font_family", DEFAULT_FONT_FAMILY),
+            )
 
     # Init genetic components for NSGA-III
     sampling = ContainerSampling(width_px, height_px, current_blueprint)
@@ -47,7 +60,7 @@ while optimization_queue:
         best_container = sampling.get_single_container()
         optimized_containers[best_container.blueprint_id] = best_container
         HTMLRenderer.write_container_to_html(
-            best_container, Path(f"best_container_{best_container.blueprint_id}.html")
+            best_container, OUTPUT_DIR / f"best_container_{best_container.label}.html"
         )
         continue
 
@@ -95,7 +108,7 @@ while optimization_queue:
     optimized_containers[best_container.blueprint_id] = best_container
 
     HTMLRenderer.write_container_to_html(
-        best_container, Path(f"best_container_{best_container.blueprint_id}.html")
+        best_container, OUTPUT_DIR / f"best_container_{best_container.label}.html"
     )
 
     # Map the container id to the size of the child container
@@ -119,7 +132,12 @@ while optimization_queue:
             children_blueprints.append((width_px, height_px, element))
 
     optimization_queue.extend(children_blueprints)
-print(optimized_containers)
+
+    # Clear text measurement cache
+    print("Clearing text measurement cache...")
+    text_measure.clear_cache()
+
+text_measure.close()
 
 
 def assemble_containers(
