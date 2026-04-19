@@ -3,8 +3,8 @@ from typing import Optional
 from genetic.attributes.position import Position
 from genetic.attributes.rgbcolor import RGBColor
 from genetic.attributes.size import Size
+from rendering.util import styles_dict_to_str
 from ui.element import UIElement
-from ui.renderer import HTMLRenderer
 
 
 class Box(UIElement):
@@ -49,4 +49,4 @@ class Box(UIElement):
             "height": f"{h * 100}%",
             "background-color": self.bg_color.to_html_str(),
         }
-        return HTMLRenderer.get_styled_element("div", styles)
+        return f'<div style="{styles_dict_to_str(styles)}"></div>'

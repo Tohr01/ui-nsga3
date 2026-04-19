@@ -2,8 +2,8 @@ from typing import Optional, cast
 
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
+from rendering.util import attributes_dict_to_str, styles_dict_to_str
 from ui.element import UIElement
-from ui.renderer import HTMLRenderer
 
 
 class PlaceholderContainer(UIElement):
@@ -50,6 +50,8 @@ class PlaceholderContainer(UIElement):
             "background-color": "transparent",
             "border": "2px dashed black",
         }
-        return HTMLRenderer.get_styled_element(
-            "div", styles, extra_attributes={"label": cast(str, self.label)}
-        )
+        attributes = {
+            "label": cast(str, self.label),
+            "style": styles_dict_to_str(styles),
+        }
+        return f"<div {attributes_dict_to_str(attributes)}></div>"

@@ -8,6 +8,7 @@ from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
+from rendering.util import styles_dict_to_str
 from ui.element import UIElement
 from ui.text_measure import TextMeasure
 
@@ -27,6 +28,7 @@ class SingleLineText(UIElement):
         position: Optional[Position] = None,
     ):
         self.text = text
+        self.font_family = font_family or DEFAULT_FONT_FAMILY
         self._max_font_size = TextMeasure.get_instance().max_fitting_font_size(
             text, self.font_family
         )
@@ -35,7 +37,6 @@ class SingleLineText(UIElement):
             if font_size is not None
             else randint(MIN_FONT_SIZE_PX, self._max_font_size + 1)
         )
-        self.font_family = font_family or DEFAULT_FONT_FAMILY
         width, height = TextMeasure.get_instance().get_dim(
             text, self.font_family, self.font_size
         )
@@ -112,11 +113,14 @@ class SingleLineText(UIElement):
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)
 
     def to_html_element(self) -> str:
-        return f"""<p style="position: absolute;
-            margin: 0;
-            padding: 0;
-            font-family: {self.font_family}; 
-            font-size: {self.font_size}px; 
-            left: {self.position.x * 100}%; 
-            top: {self.position.y * 100}%;
-            white-space: nowrap;">{self.text}</p>"""
+        styles = {
+            "position": "absolute",
+            "margin": "0",
+            "padding": "0",
+            "font-family": self.font_family,
+            "font-size": f"{self.font_size}px",
+            "left": f"{self.position.x * 100}%",
+            "top": f"{self.position.y * 100}%",
+            "white-space": "nowrap",
+        }
+        return f'<p style="{styles_dict_to_str(styles)}">{self.text}</p>'

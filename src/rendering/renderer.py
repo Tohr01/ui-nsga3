@@ -1,5 +1,6 @@
 import string
 from pathlib import Path
+from typing import Optional
 
 from ui.container import Container
 
@@ -41,32 +42,23 @@ HTML_TEMPLATE = string.Template("""
 
 class HTMLRenderer:
     @staticmethod
-    def write_container_to_html(container: Container, output_path: Path):
+    def write_container_to_html(
+        container: Container,
+        output_path: Path,
+        containers: Optional[dict[str, Container]] = None,
+    ):
         """
         Render a Container to an HTML element.
         """
         # TODO: Todo recursive rendering of nested containers
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        ui_elements_html = "".join(
-            [element.to_html_element() for element in container.elements]
-        )
+        container_html_str = container.to_html_element(containers=containers)
         with open(output_path, "w") as f:
             f.write(
                 HTML_TEMPLATE.substitute(
                     canvas_height=container.height_px,
                     canvas_width=container.width_px,
-                    ui_elements=ui_elements_html,
+                    ui_elements=container_html_str,
                 )
             )
-
-    @staticmethod
-    def get_styled_element(
-        html_element: str, styles_dict: dict, extra_attributes: dict[str, str] = {}
-    ) -> str:
-        """
-        Wrap the given HTML element with a div that applies the given styles.
-        """
-        styles = ";".join(f"{k}: {v}" for k, v in styles_dict.items())
-        extra_attrs = " ".join(f'{k}="{v}"' for k, v in extra_attributes.items())
-        return f'<{html_element} style="{styles}" {extra_attrs}></{html_element}>'

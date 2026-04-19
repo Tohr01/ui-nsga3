@@ -11,10 +11,10 @@ from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.sampling import ContainerSampling
+from rendering.renderer import HTMLRenderer
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText
 from ui.container import Container
-from ui.renderer import HTMLRenderer
 from ui.structure import (
     BlueprintContainer,
     interface_blueprint,
@@ -139,8 +139,9 @@ while optimization_queue:
 
 text_measure.close()
 
-
-def assemble_containers(
-    root_container: Container, containers: dict[str, Container]
-) -> Container:
-    pass
+optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]
+HTMLRenderer.write_container_to_html(
+    optimized_root_container,
+    OUTPUT_DIR / "optimized_interface.html",
+    optimized_containers,
+)

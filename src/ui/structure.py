@@ -79,7 +79,7 @@ interface_blueprint = RootBlueprint(
             elements=[
                 (SingleLineText, {"text": "Impressum"}),
                 (SingleLineText, {"text": "Datenschutz"}),
-                (SingleLineText, {"text": "AGBs"}),
+                (SingleLineText, {"text": "AGB"}),
             ],
             scorers=[
                 (TargetFontSizeScorer, 1.0),
