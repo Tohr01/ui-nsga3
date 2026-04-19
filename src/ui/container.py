@@ -79,8 +79,8 @@ class Container(Reproducible):
         :return: HTML string of the rendered container and its elements.
         """
         styles = {
-            "width": f"{(x or 0) * 100}%",
-            "height": f"{(y or 0) * 100}%",
+            "x": f"{(x or 0) * 100}%",
+            "y": f"{(y or 0) * 100}%",
             "height": f"{(height or 1) * 100}%",
             "width": f"{(width or 1) * 100}%",
             "position": "absolute",
