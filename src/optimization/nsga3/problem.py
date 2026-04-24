@@ -16,7 +16,7 @@ class ContainerProblem(Problem):
         # We set n_var to 1 because we will pass a single Container object as the variable to optimize
         super().__init__(n_var=1, n_obj=len(scorers), n_ieq_constr=1)
         # Init scorers
-        self.scorers = [(scorer(), weight) for scorer, weight in scorers]
+        self.scorers = [(scorer, weight) for scorer, weight in scorers]
         self.padding_scorer = PaddingScorer()
 
     def _evaluate(self, x, out, *args, **kwargs):

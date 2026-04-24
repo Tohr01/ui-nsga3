@@ -20,7 +20,7 @@ class BlueprintContainer:
     label: str
     blueprint_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     elements: list["BlueprintContainer" | tuple[Type[UIElement], dict]]
-    scorers: list[tuple[Type[Scorer], float]]
+    scorers: list[tuple[Scorer, float]]
 
     flattend_elements: list[tuple[Type[UIElement], dict]] = field(init=False)
 
@@ -82,11 +82,11 @@ interface_blueprint = RootBlueprint(
                 (SingleLineText, {"text": "AGB"}),
             ],
             scorers=[
-                (TargetFontSizeScorer, 1.0),
-                (BalanceScorer, 1.0),
-                (EquilibriumScorer, 1.0),
+                (TargetFontSizeScorer(), 1.0),
+                (BalanceScorer(), 1.0),
+                (EquilibriumScorer(), 1.0),
             ],
         ),
     ],
-    scorers=[(HeaderScorer, 1.0), (FooterScorer, 1.0), (ContentScorer, 1.0)],
+    scorers=[(HeaderScorer(), 1.0), (FooterScorer(), 1.0), (ContentScorer(), 1.0)],
 )
