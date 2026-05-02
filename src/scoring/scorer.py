@@ -8,7 +8,7 @@ class Scorer(ABC):
     def score(self, container: Container) -> float:
         """
         Scores a Container based on some criteria. Higher score is worse.
-        :param container: The UserInterface to score
+        :param container: The container to score
         :return: A penalty score
         """
         pass

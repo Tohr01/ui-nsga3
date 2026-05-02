@@ -24,8 +24,6 @@ class SymmetryScorer(Scorer):
     def __init__(self, mode: SymmetryMode = SymmetryMode.VERTICAL):
         self.mode = mode
 
-    # FIX: MODE DOESN'T SEEM TO ALIGN CORRECTLY WITH THE PAPER?
-    # DOUBLE CHECK IMPLMENTATION AND PAPER
     def score(self, container: Container) -> float:
         x_center = 0.5
         y_center = 0.5
