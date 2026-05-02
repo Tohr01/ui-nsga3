@@ -9,6 +9,8 @@ from ui.element import UIElement
 class PlaceholderContainer(UIElement):
     blueprint_id: str
 
+    # NOTE: We do not supply an element config for placeholder as it is not directly
+    # defined in the blueprint and things like mutation behavior should not be changed.
     def __init__(
         self,
         blueprint_id: str,
@@ -33,6 +35,7 @@ class PlaceholderContainer(UIElement):
         )
 
     def mutate(self, mutation_rate: float):
+        # NOTE: Ignore self.config
         self.position.mutate(mutation_rate)
         self.size.mutate(mutation_rate)
 
