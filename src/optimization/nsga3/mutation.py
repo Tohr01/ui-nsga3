@@ -14,6 +14,7 @@ class ContainerMutation(Mutation):
         for i in range(len(X)):
             # Deepcopy before inplace modification
             container = X[i, 0]
+            # PERF: Deepcopy is expensive
             copied_container = copy.deepcopy(container)
             copied_container.mutate(self.mutation_rate)
             # Set mutated container back to X

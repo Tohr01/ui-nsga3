@@ -6,6 +6,7 @@ from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
 from constants import DEFAULT_FONT_FAMILY, OUTPUT_DIR
+from optimization.nsga3.callback import ContainerCallback
 from optimization.nsga3.crossover import ContainerCrossover
 from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
@@ -22,6 +23,7 @@ from ui.structure import (
 from ui.text_measure import TextMeasure
 
 SEED = 42
+
 
 random.seed(SEED)
 np.random.seed(SEED)
@@ -52,6 +54,7 @@ while optimization_queue:
     crossover = ContainerCrossover()
     mutation = ContainerMutation(mutation_rate=0.1)
     problem = ContainerProblem(current_blueprint.scorers)
+    callback = ContainerCallback()
     bounds_repair = CanvasBoundsRepair()
 
     # We try to optimize an empty container
@@ -69,17 +72,18 @@ while optimization_queue:
     )
     algorithm = NSGA3(
         ref_dirs=ref_dirs,
-        sampling=sampling,
-        crossover=crossover,
-        mutation=mutation,
+        sampling=sampling,  # type: ignore
+        crossover=crossover,  # type: ignore
+        mutation=mutation,  # type: ignore
         repair=bounds_repair,
+        callback=callback,
         eliminate_duplicates=False,
     )
 
     results = minimize(
         problem=problem,
         algorithm=algorithm,
-        termination=("n_gen", 200),
+        termination=("n_gen", 10),
         seed=SEED,
         verbose=False,
     )
@@ -103,9 +107,13 @@ while optimization_queue:
         np.argmin(summed_objective_values[min_constraint_violation_idxs])
     ]
 
-    # TODO: Store container
     best_container: Container = containers[best_container_idx]
     optimized_containers[best_container.blueprint_id] = best_container
+    best_container_scores = {
+        (scorer.__class__.__name__, scorer.score(best_container) * weight)
+        for scorer, weight in current_blueprint.scorers
+    }
+    print(best_container.label, best_container_scores)
 
     HTMLRenderer.write_container_to_html(
         best_container, OUTPUT_DIR / f"best_container_{best_container.label}.html"
