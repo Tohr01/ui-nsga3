@@ -2,14 +2,14 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Type
 
-from scoring.balance import BalanceScorer
+from scoring.aesthetic.balance import BalanceScorer
+from scoring.aesthetic.equilibrium import EquilibriumScorer
+from scoring.aesthetic.symmetry import SymmetryMode, SymmetryScorer
 from scoring.content import ContentScorer
-from scoring.equilibrium import EquilibriumScorer
 from scoring.footer import FooterScorer
 from scoring.header import HeaderScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.scorer import Scorer
-from scoring.symmetry import SymmetryMode, SymmetryScorer
 from scoring.text.same_text_size import SameTextSizeScorer
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
