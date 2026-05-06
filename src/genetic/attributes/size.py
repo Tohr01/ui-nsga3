@@ -1,9 +1,10 @@
 from typing import Optional
-from constants import CANVAS_ASPECT_RATIO_Y, CANVAS_ASPECT_RATIO_X
+
+from numpy import random
+
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from genetic.reproducible import Reproducible
-from numpy import random
 
 
 class Size(Reproducible):
@@ -45,9 +46,9 @@ class Size(Reproducible):
         """
         return self.width * self.height
 
-    def visual_area(self) -> float:
+    def visual_area(self, aspect_x: float, aspect_y: float) -> float:
         # TODO: Comment
-        return self.width * CANVAS_ASPECT_RATIO_X * self.height * CANVAS_ASPECT_RATIO_Y
+        return self.width * aspect_x * self.height * aspect_y
 
     def get_wh(self) -> tuple[float, float]:
         return self.width, self.height
