@@ -19,13 +19,17 @@ from ui.text_measure import TextMeasure
 
 class TextType(StrEnum):
     HEADER = "header"
+    SUBHEADER = "subheader"
     PARAGRAPH = "paragraph"
+    LABEL = "label"
+    CAPTION = "caption"
     OTHER = "other"
 
 
 @dataclass
 class SingleLineTextConfig(ElementConfig):
     text_type: TextType = TextType.OTHER
+    is_multiline: bool = False  # NOTE: Currently not used
     enable_font_size_crossover: bool = True
     enable_font_size_mutation: bool = True
 

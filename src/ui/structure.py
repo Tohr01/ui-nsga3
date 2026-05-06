@@ -10,6 +10,7 @@ from scoring.header import HeaderScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.scorer import Scorer
 from scoring.symmetry import SymmetryMode, SymmetryScorer
+from scoring.text.same_text_size import SameTextSizeScorer
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
 from ui.container import Container
@@ -98,6 +99,7 @@ footer = BlueprintContainer(
         (SymmetryScorer(SymmetryMode.VERTICAL), 0.5),
         (BalanceScorer(), 1.0),
         (EquilibriumScorer(), 1.0),
+        (SameTextSizeScorer(), 1.0),
     ],
 )
 
