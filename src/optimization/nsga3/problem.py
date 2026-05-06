@@ -1,5 +1,3 @@
-from typing import Type
-
 import numpy as np
 from pymoo.core.problem import Problem
 
@@ -12,7 +10,7 @@ class ContainerProblem(Problem):
     # TODO: Outsource
     padding_scorer: PaddingScorer
 
-    def __init__(self, scorers: list[tuple[Type[Scorer], float]]):
+    def __init__(self, scorers: list[tuple[Scorer, float]]):
         # We set n_var to 1 because we will pass a single Container object as the variable to optimize
         super().__init__(n_var=1, n_obj=len(scorers), n_ieq_constr=1)
         # Init scorers
@@ -30,6 +28,5 @@ class ContainerProblem(Problem):
 
             padding_score = self.padding_scorer.score(container)
             constraints.append([padding_score])
-
         out["F"] = np.array(objectives, dtype=float)
         out["G"] = np.array(constraints, dtype=float)

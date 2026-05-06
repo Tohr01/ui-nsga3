@@ -36,6 +36,7 @@ class TextMeasure:
     def set_canvas_dim(self, w_px: float, h_px: float):
         self._canvas_w_px = w_px
         self._canvas_h_px = h_px
+        self.clear_cache()
 
     def get_dim(
         self,
@@ -91,9 +92,10 @@ class TextMeasure:
         :param font_family: The font family to use for measurement
         """
         current_font_size = MIN_FONT_SIZE_PX
-        dim = None
-        while dim is None or (dim[0] <= 1 and dim[1] <= 1):
+        while True:
             dim = self.get_dim(text, font_family, current_font_size)
+            if dim[0] > 1 or dim[1] > 1:
+                break
             current_font_size += 1
         self._max_fitting_cache[(text, font_family)] = current_font_size - 1
         print(f"Precached font sizes up to {current_font_size - 1}")
