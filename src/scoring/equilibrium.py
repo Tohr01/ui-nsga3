@@ -21,7 +21,7 @@ class EquilibriumScorer(Scorer):
         for element in container.elements:
             x, y = element.position.get_xy()
             w, h = element.size.get_wh()
-            area = element.size.visual_area()
+            area = element.size.area()
             x_center_elem = x + w / 2
             y_center_elem = y + h / 2
             total_area += area

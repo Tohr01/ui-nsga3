@@ -19,7 +19,7 @@ class BalanceScorer(Scorer):
             pos = element.position
             size = element.size
 
-            area = size.visual_area()
+            area = size.area()
             cx = pos.x + size.width / 2
             cy = pos.y + size.height / 2
 
