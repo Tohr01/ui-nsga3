@@ -4,13 +4,14 @@ from typing import Type
 
 from scoring.balance import BalanceScorer
 from scoring.content import ContentScorer
-from scoring.debug.target_font_size import TargetFontSizeScorer
 from scoring.equilibrium import EquilibriumScorer
 from scoring.footer import FooterScorer
 from scoring.header import HeaderScorer
+from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.scorer import Scorer
+from scoring.symmetry import SymmetryMode, SymmetryScorer
 from ui.components.placeholder_container import PlaceholderContainer
-from ui.components.singleline_text import SingleLineText
+from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
 from ui.container import Container
 from ui.element import UIElement
 
@@ -67,6 +68,40 @@ class RootBlueprint(BlueprintContainer):
     label: str = "Interface Root"
 
 
+footer = BlueprintContainer(
+    label="Footer",
+    elements=[
+        (
+            SingleLineText,
+            {
+                "text": "Impressum",
+                "config": SingleLineTextConfig(is_touch_target=True),
+            },
+        ),
+        (
+            SingleLineText,
+            {
+                "text": "Datenschutz",
+                "config": SingleLineTextConfig(is_touch_target=True),
+            },
+        ),
+        (
+            SingleLineText,
+            {
+                "text": "AGB",
+                "config": SingleLineTextConfig(is_touch_target=True),
+            },
+        ),
+    ],
+    scorers=[
+        (MinTouchTargetSizeScorer(), 5.0),
+        (SymmetryScorer(SymmetryMode.VERTICAL), 0.5),
+        (BalanceScorer(), 1.0),
+        (EquilibriumScorer(), 1.0),
+    ],
+)
+
+# TODO: Move to seperate location
 interface_blueprint = RootBlueprint(
     width_px=1920,
     height_px=1080,
@@ -74,19 +109,7 @@ interface_blueprint = RootBlueprint(
     elements=[
         BlueprintContainer(label="Header", elements=[], scorers=[]),
         BlueprintContainer(label="Content", elements=[], scorers=[]),
-        BlueprintContainer(
-            label="Footer",
-            elements=[
-                (SingleLineText, {"text": "Impressum"}),
-                (SingleLineText, {"text": "Datenschutz"}),
-                (SingleLineText, {"text": "AGB"}),
-            ],
-            scorers=[
-                (TargetFontSizeScorer(), 1.0),
-                (BalanceScorer(), 1.0),
-                (EquilibriumScorer(), 1.0),
-            ],
-        ),
+        footer,
     ],
     scorers=[(HeaderScorer(), 1.0), (FooterScorer(), 1.0), (ContentScorer(), 1.0)],
 )
