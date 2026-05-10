@@ -2,7 +2,7 @@ from math import comb
 from typing import Optional, cast
 
 import numpy as np
-from pymoo.algorithms.moo.nsga3 import NSGA3
+from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
@@ -157,7 +157,8 @@ def run_nsga3_optimization(
         print(
             f"Amount of reference directions: {len(ref_dirs)}; Population size: {pop_size}"
         )
-        algorithm = NSGA3(
+
+        algorithm = UNSGA3(
             pop_size=pop_size,
             ref_dirs=ref_dirs,
             sampling=sampling,  # type: ignore
