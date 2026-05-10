@@ -1,9 +1,10 @@
 from pathlib import Path
 
-# Evolution settings
-POPULATION_SIZE = 100
-MAX_GENERATIONS = 2000
-FITNESS_MAX_STAGNATION_GENERATIONS = 30
+BASE_LOGGER_NAME = "ui-nsga3"
+
+# Reference direction settings
+# Max number of objectives for which to use Das-Dennis reference directions (instead of energy-based reference directions)
+MAX_OBJECTIVES_DAS_DENNIS = 4
 
 # Text settings
 MIN_FONT_SIZE_PX = 2

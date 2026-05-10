@@ -3,6 +3,9 @@ from typing import Optional
 from playwright.sync_api import Browser, Page, Playwright, sync_playwright
 
 from constants import MIN_FONT_SIZE_PX
+from logger import get_new_logger
+
+logger = get_new_logger("ui.text_measure")
 
 
 class TextMeasure:
@@ -98,7 +101,9 @@ class TextMeasure:
                 break
             current_font_size += 1
         self._max_fitting_cache[(text, font_family)] = current_font_size - 1
-        print(f"Precached font sizes up to {current_font_size - 1}")
+        logger.debug(
+            f"Precached font sizes up to {current_font_size - 1} for text '{text}' and font family '{font_family}'"
+        )
 
     def max_fitting_font_size(self, text: str, font_family: str) -> int:
         """
