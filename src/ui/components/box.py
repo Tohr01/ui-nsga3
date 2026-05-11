@@ -59,13 +59,6 @@ class Box(UIElement):
         if self.config.enable_bg_color_mutation:
             self.bg_color.mutate(mutation_rate)
 
-    def mutatable_gene_count(self) -> int:
-        return (
-            self.position.mutatable_gene_count()
-            + self.size.mutatable_gene_count()
-            + self.bg_color.mutatable_gene_count()
-        )
-
     def to_html_element(self) -> str:
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()

@@ -58,9 +58,6 @@ class Container(Reproducible):
         for element in self.elements:
             element.mutate(mutation_rate)
 
-    def mutatable_gene_count(self) -> int:
-        return sum(element.mutatable_gene_count() for element in self.elements)
-
     def __repr__(self) -> str:
         elements_str = "\n".join(type(element).__name__ for element in self.elements)
         return f"""--- Container "{self.label}" - {self.blueprint_id} ---

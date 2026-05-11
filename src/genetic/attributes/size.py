@@ -36,9 +36,6 @@ class Size(Reproducible):
             normal_distribution_mutate(value=self.height, mutation_rate=mutation_rate),
         )
 
-    def mutatable_gene_count(self) -> int:
-        return 2
-
     # TODO: Maybe precompute and store as instance var
     def area(self) -> float:
         """

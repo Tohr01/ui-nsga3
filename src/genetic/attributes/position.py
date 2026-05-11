@@ -38,8 +38,5 @@ class Position(Reproducible):
         self.x = normal_distribution_mutate(value=self.x, mutation_rate=mutation_rate)
         self.y = normal_distribution_mutate(value=self.y, mutation_rate=mutation_rate)
 
-    def mutatable_gene_count(self) -> int:
-        return 2
-
     def get_xy(self) -> tuple[float, float]:
         return self.x, self.y

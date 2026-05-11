@@ -39,13 +39,3 @@ class Reproducible(ABC, Generic[T]):
         offspring = type(i1).crossover(i1, i2)
         offspring.mutate(mutation_rate)
         return offspring
-
-    @abstractmethod
-    def mutatable_gene_count(self) -> int:
-        """
-        Return the number of mutatable genes in the individual.
-        :return: Number of mutatable genes
-        """
-        raise NotImplementedError(
-            "mutatable_gene_count method must be implemented by subclass."
-        )

@@ -39,9 +39,6 @@ class PlaceholderContainer(UIElement):
         self.position.mutate(mutation_rate)
         self.size.mutate(mutation_rate)
 
-    def mutatable_gene_count(self) -> int:
-        return self.position.mutatable_gene_count() + self.size.mutatable_gene_count()
-
     def to_html_element(self) -> str:
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()

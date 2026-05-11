@@ -122,10 +122,6 @@ class SingleLineText(UIElement):
                 self.text, self.font_family, self.font_size
             )
 
-    def mutatable_gene_count(self) -> int:
-        # Pos + font size
-        return self.position.mutatable_gene_count() + 1
-
     def clamp_to_canvas(self):
         """
         Shrink font size until the text fits within the canvas bounds,

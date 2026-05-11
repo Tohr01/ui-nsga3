@@ -1,8 +1,10 @@
 from typing import Optional
+
+from numpy import clip, random
+
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from genetic.reproducible import Reproducible
-from numpy import clip, random
 
 
 class RGBColor(Reproducible):
@@ -43,9 +45,6 @@ class RGBColor(Reproducible):
                 255,
             )
             setattr(self, channel, int(mutated_channel))
-
-    def mutatable_gene_count(self) -> int:
-        return 3
 
     # NOTE: This is not in a overridden method of reproducible
     def to_html_str(self) -> str:
