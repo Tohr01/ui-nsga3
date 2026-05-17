@@ -17,6 +17,7 @@ import numpy as np
 from constants import BASE_LOGGER_NAME, OUTPUT_DIR
 from optimization.nsga3 import run_nsga3_optimization
 from rendering.renderer import HTMLRenderer
+from ui.components.aspect_image import AspectImage
 from ui.structure import interface_blueprint
 
 parser = ArgumentParser(
@@ -85,6 +86,13 @@ if __name__ == "__main__":
         HTMLRenderer.write_container_to_html(
             container, OUTPUT_DIR / f"{container.label}_optimized.html"
         )
+
+    # TODO: REMOVE
+    from ui.structure import content
+
+    for e in optimized_containers[content.blueprint_id].elements:
+        if isinstance(e, AspectImage):
+            print(f"Optimized AspectImage size: {e.size.get_wh()}")
 
     # Assemble final ui
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]

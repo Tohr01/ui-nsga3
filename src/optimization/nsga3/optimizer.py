@@ -190,6 +190,7 @@ def run_nsga3_optimization(
         # Select the best container based on the following criteria:
         # 1. Containers with lowest constraint violation
         # 2. Among those pick container with best objective values (summing all objectives; minimize)
+        # TODO: HANDLE X etc. one dimensional
         containers = results.X[:, 0]
         objective_values = results.F
         aggr_constraint_violations: np.ndarray = results.CV.flatten()

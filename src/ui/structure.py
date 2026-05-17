@@ -2,15 +2,23 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Type
 
+import PIL.Image as Image
+
 from scoring.aesthetic.balance import BalanceScorer
 from scoring.aesthetic.equilibrium import EquilibriumScorer
 from scoring.aesthetic.symmetry import SymmetryMode, SymmetryScorer
 from scoring.content import ContentScorer
+from scoring.element_order import ElementOrderScorer
 from scoring.footer import FooterScorer
 from scoring.header import HeaderScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.scorer import Scorer
+from scoring.screen_space_utilize import (
+    ScreenSpaceDimensionMode,
+    ScreenSpaceUtitizationScorer,
+)
 from scoring.text.same_text_size import SameTextSizeScorer
+from ui.components.cover_image import CoverImage
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
 from ui.container import Container
@@ -50,6 +58,9 @@ class BlueprintContainer:
         object.__setattr__(self, "flattend_elements", flattend_elements)
 
     def get_new_container(self, width_px: float, height_px: float) -> Container:
+        """
+        Returns a new Container instance based on the blueprint with the given dimensions.
+        """
         return Container(
             blueprint_id=self.blueprint_id,
             width_px=width_px,
@@ -67,6 +78,38 @@ class RootBlueprint(BlueprintContainer):
     width_px: float
     height_px: float
     label: str = "Interface Root"
+
+
+#
+# Content
+#
+product_photo = Image.open("assets/sneaker.jpg")
+product_photo_ar = product_photo.width / product_photo.height
+content = BlueprintContainer(
+    label="Content",
+    elements=[
+        # (Box, {"label": "Box"}),
+        (
+            CoverImage,
+            {
+                "img_path": "assets/sneaker.jpg",
+                "label": "Product_Image",
+            },
+        ),
+        BlueprintContainer(label="Product_Details", elements=[], scorers=[]),
+    ],
+    scorers=[
+        (SymmetryScorer(), 1.0),
+        (BalanceScorer(), 1.0),
+        (ScreenSpaceUtitizationScorer(ScreenSpaceDimensionMode.BOTH), 2.0),
+        (
+            ElementOrderScorer(
+                element_order_labels=["Product_Image", "Product_Details"]
+            ),
+            1.0,
+        ),
+    ],
+)
 
 
 footer = BlueprintContainer(
@@ -110,7 +153,7 @@ interface_blueprint = RootBlueprint(
     label="Interface",
     elements=[
         BlueprintContainer(label="Header", elements=[], scorers=[]),
-        BlueprintContainer(label="Content", elements=[], scorers=[]),
+        content,
         footer,
     ],
     scorers=[(HeaderScorer(), 1.0), (FooterScorer(), 1.0), (ContentScorer(), 1.0)],
