@@ -1,5 +1,3 @@
-from math import sqrt
-
 from scoring.scorer import Scorer
 
 
@@ -13,19 +11,16 @@ class MinTouchTargetSizeScorer(Scorer):
     """
 
     def score(self, container) -> float:
-        penalty = 0
+        penalty = 0.0
         for element in container.elements:
             if element.config.is_touch_target:
-                # Convert rel units to pixels.
                 w, h = element.size.get_wh()
+                # Convert rel units to px
                 w_px = w * container.width_px
                 h_px = h * container.height_px
-                w_penality = (
-                    max(0, 44 - w_px) / container.width_px
-                ) * container.width_aspect_ratio
-                h_penality = (
-                    max(0, 44 - h_px) / container.height_px
-                ) * container.height_aspect_ratio
-                penalty += sqrt(w_penality**2 + h_penality**2)
+
+                w_penalty = max(0.0, 44 - w_px) / container.width_px
+                h_penalty = max(0.0, 44 - h_px) / container.height_px
+                penalty += w_penalty + h_penalty
 
         return penalty
