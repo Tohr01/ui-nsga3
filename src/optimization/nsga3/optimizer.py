@@ -17,6 +17,7 @@ from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.sampling import ContainerSampling
+from ui.canvas_context import CanvasContext
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText
 from ui.container import Container
@@ -122,6 +123,9 @@ def run_nsga3_optimization(
         logger.info(
             f"Optimizing blueprint {current_blueprint.label} with size ({width_px}px, {height_px}px)"
         )
+
+        # Set canvas dimensions
+        CanvasContext.get_instance().set_canvas_dim(width_px, height_px)
 
         # Init genetic components for NSGA-III
         sampling = ContainerSampling(width_px, height_px, current_blueprint)

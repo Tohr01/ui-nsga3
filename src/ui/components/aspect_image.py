@@ -10,6 +10,7 @@ from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from rendering.util import styles_dict_to_str
+from ui.canvas_context import CanvasContext
 from ui.element import ElementConfig, UIElement
 from ui.util import img_path_to_base64_str
 
@@ -21,8 +22,8 @@ class AspectImageConfig(ElementConfig):
 
 class AspectImage(UIElement):
     img_path: str
-    config: AspectImageConfig  # type: ignore[override]
     aspect_ratio: float  # width / height
+    config: AspectImageConfig  # type: ignore[override]
 
     def __init__(
         self,
@@ -36,18 +37,19 @@ class AspectImage(UIElement):
         self.img_path = img_path
         self.aspect_ratio = aspect_ratio
         if size is None:
-            r_height = random.uniform(0, 1)
-            size = self._size_from(r_height)
+            r_width = random.uniform(0, 1)
+            size = self._size_from(r_width)
 
         super().__init__(label=label, position=position, size=size, config=config)
 
-    def _size_from(self, height: float) -> Size:
+    def _size_from(self, width: float) -> Size:
         """
-        Returns new Size object with given height and fitting width based on the aspect ratio.
-        :param height: The height to use for the new Size object.
+        Returns new Size object with given width and fitting height based on the aspect ratio
+        based on the image and canvas aspect ratios.
+        :param width: The width to use for the new Size object.
         :return: A new Size object
         """
-        width = height * self.aspect_ratio
+        height = width * (CanvasContext.get_instance().aspect_ratio / self.aspect_ratio)
         return Size(width, height)
 
     @staticmethod
@@ -59,12 +61,10 @@ class AspectImage(UIElement):
             else i1.position
         )
         # Crossover size
-        # In order to retain aspect ratio we crossover the height and deduce the width
+        # In order to retain aspect ratio we crossover the width and deduce the height
         if i1.config.enable_size_crossover:
-            new_height = max(
-                0, intermediate_recombination(i1.size.height, i2.size.height)
-            )
-            new_size = i1._size_from(new_height)
+            new_width = max(0, intermediate_recombination(i1.size.width, i2.size.width))
+            new_size = i1._size_from(new_width)
         else:
             new_size = deepcopy(i1.size)
 
@@ -81,26 +81,21 @@ class AspectImage(UIElement):
         if self.config.enable_position_mutation:
             self.position.mutate(mutation_rate)
         if self.config.enable_size_mutation:
-            # Mutate height and deduce width to retain aspect ratio
-            new_height = max(
+            # Mutate width and deduce height to retain aspect ratio
+            new_width = max(
                 0,
                 normal_distribution_mutate(
-                    value=self.size.height, mutation_rate=mutation_rate
+                    value=self.size.width, mutation_rate=mutation_rate
                 ),
             )
-            self.size = self._size_from(new_height)
+            self.size = self._size_from(new_width)
 
     def clamp_to_canvas(self):
         # Clamp size to fit within canvas; retaining aspect ratio
         if self.size.width > 1 or self.size.height > 1:
-            # One dimension is larger than canvas
-            non_zero_dimensions_scales = [
-                d for d in [self.size.width, self.size.height] if d > 0
-            ]
-            if non_zero_dimensions_scales:
-                scale = min(1 / d for d in non_zero_dimensions_scales)
-                self.size.width *= scale
-                self.size.height *= scale
+            scale = 1 / max(self.size.width, self.size.height)
+            self.size.width *= scale
+            self.size.height *= scale
 
         # Clamp position to fit within canvas
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
@@ -113,6 +108,6 @@ class AspectImage(UIElement):
             "left": f"{self.position.x * 100}%",
             "top": f"{self.position.y * 100}%",
             "height": f"{self.size.height * 100}%",
-            "aspect-ratio": f"{self.aspect_ratio}",
+            "width": f"{self.size.width * 100}%",
         }
-        return f'<img src={img_path_to_base64_str(self.img_path)} style="{styles_dict_to_str(styles)}" />'
+        return f'<img src="{img_path_to_base64_str(self.img_path)}" style="{styles_dict_to_str(styles)}" />'

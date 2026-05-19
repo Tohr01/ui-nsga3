@@ -7,6 +7,9 @@ from logger import get_new_logger
 
 logger = get_new_logger("ui.text_measure")
 
+# TODO: Maybe refactor such that the TextMeasure class uses
+# the CanvasContext under the hood to get the canvas dimensions
+
 
 class TextMeasure:
     _instance: Optional["TextMeasure"] = None  # Singleton instance

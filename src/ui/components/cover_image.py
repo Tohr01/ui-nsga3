@@ -67,4 +67,4 @@ class CoverImage(UIElement):
             "height": f"{h * 100}%",
             "object-fit": "cover",
         }
-        return f'<img src={img_path_to_base64_str(self.img_path)} style="{styles_dict_to_str(styles)}" />'
+        return f'<img src="{img_path_to_base64_str(self.img_path)}" style="{styles_dict_to_str(styles)}" />'
