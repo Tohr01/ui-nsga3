@@ -14,7 +14,6 @@ from scoring.header import HeaderScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.scorer import Scorer
 from scoring.screen_space_utilize import (
-    ScreenSpaceDimensionMode,
     ScreenSpaceUtitizationScorer,
 )
 from scoring.text.same_text_size import SameTextSizeScorer
@@ -101,7 +100,7 @@ content = BlueprintContainer(
     scorers=[
         (SymmetryScorer(), 1.0),
         (BalanceScorer(), 1.0),
-        (ScreenSpaceUtitizationScorer(ScreenSpaceDimensionMode.BOTH), 2.0),
+        (ScreenSpaceUtitizationScorer(), 2.0),
         (
             ElementOrderScorer(
                 element_order_labels=["Product_Image", "Product_Details"]
