@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
+from enum import StrEnum
 from typing import Optional
 
 import numpy.random as random
@@ -15,9 +16,15 @@ from ui.element import ElementConfig, UIElement
 from ui.util import img_path_to_base64_str
 
 
+class ImageType(StrEnum):
+    LOGO = "logo"
+    ICON = "icon"
+    OTHER = "other"
+
+
 @dataclass
 class AspectImageConfig(ElementConfig):
-    pass
+    image_type: ImageType = ImageType.OTHER
 
 
 class AspectImage(UIElement):

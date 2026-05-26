@@ -4,13 +4,14 @@ from typing import Optional
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from rendering.util import styles_dict_to_str
+from ui.components.aspect_image import ImageType
 from ui.element import ElementConfig, UIElement
 from ui.util import img_path_to_base64_str
 
 
 @dataclass
 class ConverImageConfig(ElementConfig):
-    pass
+    image_type: ImageType = ImageType.OTHER
 
 
 class CoverImage(UIElement):
