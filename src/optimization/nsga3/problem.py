@@ -1,7 +1,8 @@
 import numpy as np
 from pymoo.core.problem import Problem
 
-from scoring.padding import PaddingScorer
+from scoring.constraints.min_size import MinSizeScorer
+from scoring.constraints.padding import PaddingScorer
 from scoring.scorer import Scorer
 
 
@@ -9,13 +10,15 @@ class ContainerProblem(Problem):
     scorers: list[tuple[Scorer, float]]
     # TODO: Outsource
     padding_scorer: PaddingScorer
+    min_size_scorer: MinSizeScorer
 
     def __init__(self, scorers: list[tuple[Scorer, float]]):
         # We set n_var to 1 because we will pass a single Container object as the variable to optimize
-        super().__init__(n_var=1, n_obj=len(scorers), n_ieq_constr=1)
+        super().__init__(n_var=1, n_obj=len(scorers), n_ieq_constr=2)
         # Init scorers
         self.scorers = [(scorer, weight) for scorer, weight in scorers]
-        self.padding_scorer = PaddingScorer()
+        self.padding_scorer = PaddingScorer(padding=0.01)
+        self.min_size_scorer = MinSizeScorer(min_width=0.0, min_height=0.0)
 
     def _evaluate(self, x, out, *args, **kwargs):
         objectives = []
@@ -27,6 +30,7 @@ class ContainerProblem(Problem):
             objectives.append(scores)
 
             padding_score = self.padding_scorer.score(container)
-            constraints.append([padding_score])
+            min_size_score = self.min_size_scorer.score(container)
+            constraints.append([padding_score, min_size_score])
         out["F"] = np.array(objectives, dtype=float)
         out["G"] = np.array(constraints, dtype=float)
