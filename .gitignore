@@ -5,4 +5,5 @@ output/
 .DS_Store
 todo.md
 best_container_*.html
-src/test.py
+src/test_blueprints/*
+test.html
