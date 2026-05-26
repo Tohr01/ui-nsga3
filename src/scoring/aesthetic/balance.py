@@ -4,6 +4,7 @@ from scoring.scorer import Scorer
 from ui.container import Container
 
 
+# TODO: Change to non researchgate source
 class BalanceScorer(Scorer):
     """
     Scores a Container based on the balance of its elements.
@@ -39,4 +40,9 @@ class BalanceScorer(Scorer):
         y_balance = wt - wb
 
         # Return the distance from perfect balance (0, 0) as penalty
-        return sqrt(x_balance**2 + y_balance**2)
+        num_elements = len(container.elements)
+        return (
+            sqrt(x_balance**2 + y_balance**2) / num_elements
+            if num_elements != 0
+            else 0.0
+        )

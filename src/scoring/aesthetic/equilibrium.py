@@ -40,4 +40,5 @@ class EquilibriumScorer(Scorer):
         # TODO: Maybe return (em_x + em_y) / 2
 
         # Return the distance from perfect equilibrium (0, 0) as penalty
-        return sqrt(em_x**2 + em_y**2)
+        num_elements = len(container.elements)
+        return sqrt(em_x**2 + em_y**2) / num_elements if num_elements != 0 else 0.0
