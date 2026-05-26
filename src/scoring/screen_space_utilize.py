@@ -2,7 +2,7 @@ from scoring.scorer import Scorer
 from ui.container import Container
 
 
-class ScreenSpaceUtitizationScorer(Scorer):
+class ScreenSpaceUtilizationScorer(Scorer):
     """
     This scorer penalizes unused screen space (width*height)
     It calculates the total area covered by the elements and returns a penality based on
@@ -13,6 +13,8 @@ class ScreenSpaceUtitizationScorer(Scorer):
     """
 
     def score(self, container: Container) -> float:
+        # NOTE: Because our iequality contraints flags overlapping elements as illegal we
+        # sum the area of each element
         area_covered = sum(
             w * h for element in container.elements for w, h in [element.size.get_wh()]
         )

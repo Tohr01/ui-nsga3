@@ -1,1 +1,3 @@
 Sneaker img source: https://pixabay.com/de/photos/niesencrew-schuhe-turnschuhe-mode-6306330/
+Cart icon source: https://lucide.dev/icons/shopping-cart
+User icon source: https://lucide.dev/icons/user

@@ -29,4 +29,9 @@ class SameTextSizeScorer(Scorer):
                 max_size = max(font_sizes)
                 if max_size > 0:
                     penalty += (max_size - min(font_sizes)) / max_size
-        return penalty
+
+        return (
+            penalty / len(text_type_to_font_sizes)
+            if len(text_type_to_font_sizes) > 0
+            else 0.0
+        )
