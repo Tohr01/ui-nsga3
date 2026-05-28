@@ -24,8 +24,8 @@ class BalanceScorer(Scorer):
             cx = pos.x + size.width / 2
             cy = pos.y + size.height / 2
 
-            dx = abs(x_center - cx) * container.width_aspect_ratio
-            dy = abs(y_center - cy) * container.height_aspect_ratio
+            dx = abs(x_center - cx)
+            dy = abs(y_center - cy)
             if cx < x_center:
                 wl += area * dx
             elif cx > x_center:

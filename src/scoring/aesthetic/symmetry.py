@@ -53,10 +53,10 @@ class SymmetryScorer(Scorer):
             else:
                 selected_g = g_lr
 
-            selected_g[0] += x_diff * container.width_aspect_ratio
-            selected_g[1] += y_diff * container.height_aspect_ratio
-            selected_g[2] += size.width * container.width_aspect_ratio
-            selected_g[3] += size.height * container.height_aspect_ratio
+            selected_g[0] += x_diff
+            selected_g[1] += y_diff
+            selected_g[2] += size.width
+            selected_g[3] += size.height
 
         g_ul = np.array(g_ul, dtype=float)
         g_ur = np.array(g_ur, dtype=float)

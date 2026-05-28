@@ -68,7 +68,4 @@ class ProximityScorer(Scorer):
             max(e1.position.y, e2.position.y)
             - min(e1.position.y + e1.size.height, e2.position.y + e2.size.height),
         )
-        return math.hypot(
-            dx * container.width_aspect_ratio,
-            dy * container.height_aspect_ratio,
-        )
+        return math.hypot(dx, dy)

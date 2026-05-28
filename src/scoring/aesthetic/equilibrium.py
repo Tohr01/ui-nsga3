@@ -34,8 +34,8 @@ class EquilibriumScorer(Scorer):
         x_0 = weighted_x_sum / total_area if total_area != 0 else x_center
         y_0 = weighted_y_sum / total_area if total_area != 0 else y_center
 
-        em_x = (x_center - x_0) * container.width_aspect_ratio
-        em_y = (y_center - y_0) * container.height_aspect_ratio
+        em_x = x_center - x_0
+        em_y = y_center - y_0
 
         # TODO: Maybe return (em_x + em_y) / 2
 

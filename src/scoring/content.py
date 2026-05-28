@@ -19,8 +19,8 @@ class ContentScorer(Scorer):
         w, h = content.size.get_wh()
 
         # X: Start at left should start at left edge; span full width
-        x_penalty = x * container.width_aspect_ratio
-        w_penalty = (1.0 - w) * container.width_aspect_ratio
+        x_penalty = x
+        w_penalty = 1.0 - w
 
         # Y: should start directly below header (if header exists)
         y_optimal = header.size.height if header else 0.0
@@ -28,8 +28,8 @@ class ContentScorer(Scorer):
         # Height: should fill space between header bottom and footer top (if footer exists)
         footer_h = footer.size.height if footer else 0.0
         h_optimal = 1.0 - y_optimal - footer_h
-        y_penalty = abs(y - y_optimal) * container.height_aspect_ratio
-        h_penalty = abs(h - h_optimal) * container.height_aspect_ratio
+        y_penalty = abs(y - y_optimal)
+        h_penalty = abs(h - h_optimal)
 
         penalty += sqrt(x_penalty**2 + y_penalty**2 + w_penalty**2 + h_penalty**2)
         return penalty
