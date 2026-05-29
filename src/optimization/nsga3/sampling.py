@@ -1,8 +1,8 @@
 import numpy as np
 from pymoo.util.misc import Sampling
 
+from ui.blueprint import BlueprintContainer
 from ui.container import Container
-from ui.structure import BlueprintContainer
 
 
 class ContainerSampling(Sampling):

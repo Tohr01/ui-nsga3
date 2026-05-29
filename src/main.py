@@ -14,10 +14,10 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 import numpy as np
 
+from blueprints.ecommerce_prototype import interface_blueprint
 from constants import BASE_LOGGER_NAME, OUTPUT_DIR
 from optimization.nsga3 import run_nsga3_optimization
 from rendering.renderer import HTMLRenderer
-from ui.structure import interface_blueprint
 
 parser = ArgumentParser(
     prog="ui-nsga3",

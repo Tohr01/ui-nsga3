@@ -17,11 +17,11 @@ from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.sampling import ContainerSampling
+from ui.blueprint import BlueprintContainer, RootBlueprint
 from ui.canvas_context import CanvasContext
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.components.singleline_text import SingleLineText
 from ui.container import Container
-from ui.structure import BlueprintContainer, RootBlueprint
 from ui.text_measure import TextMeasure
 
 logger = get_new_logger("optimization.nsga3.optimizer")
