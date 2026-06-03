@@ -99,6 +99,6 @@ header = BlueprintContainer(
         (MaxIconSizeScorer(), 1.0),
         (SameTextSizeScorer(), 1.0),
         (AxisAlignScorer(), 2.0),
-        (SymmetryScorer(SymmetryMode.RADIAL), 0.5),
+        (SymmetryScorer(SymmetryMode.RADIAL), 2.5),
     ],
 )

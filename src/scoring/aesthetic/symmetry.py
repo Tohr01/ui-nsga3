@@ -31,7 +31,7 @@ class SymmetryScorer(Scorer):
         g_ur = [0.0, 0.0, 0.0, 0.0]
         g_ll = [0.0, 0.0, 0.0, 0.0]
         g_lr = [0.0, 0.0, 0.0, 0.0]
-
+        MAX_NORM = np.sqrt(0.5**2 + 0.5**2 + 1.0**2 + 1.0**2)
         for element in container.elements:
             pos = element.position
             size = element.size
@@ -63,17 +63,22 @@ class SymmetryScorer(Scorer):
         g_ll = np.array(g_ll, dtype=float)
         g_lr = np.array(g_lr, dtype=float)
 
+        penalty = 0.0
         if self.mode == SymmetryMode.VERTICAL:
             g_ul_ur_diff = g_ul - g_ur
             g_ll_lr_diff = g_ll - g_lr
-            return float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff))
+            penalty = float(np.linalg.norm(g_ul_ur_diff) + np.linalg.norm(g_ll_lr_diff))
         elif self.mode == SymmetryMode.HORIZONTAL:
             g_ul_ll_diff = g_ul - g_ll
             g_ur_lr_diff = g_ur - g_lr
-            return float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff))
+            penalty = float(np.linalg.norm(g_ul_ll_diff) + np.linalg.norm(g_ur_lr_diff))
         elif self.mode == SymmetryMode.RADIAL:
             g_ul_lr_diff = g_ul - g_lr
             g_ur_ll_diff = g_ur - g_ll
-            return float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff))
+            penalty = float(np.linalg.norm(g_ul_lr_diff) + np.linalg.norm(g_ur_ll_diff))
         else:
             raise ValueError(f"Unknown symmetry mode: {self.mode}")
+
+        return (
+            penalty / len(container.elements) if len(container.elements) != 0 else 0.0
+        )
