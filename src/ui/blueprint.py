@@ -16,6 +16,7 @@ class BlueprintContainer:
     scorers: list[tuple[Scorer, float]]
 
     flattend_elements: list[tuple[Type[UIElement], dict]] = field(init=False)
+    container_subelement_count: dict[str, int] = field(init=False)
 
     def __post_init__(self):
         """
@@ -39,6 +40,32 @@ class BlueprintContainer:
                 flattend_elements.append(element)
         # Bypass frozen
         object.__setattr__(self, "flattend_elements", flattend_elements)
+
+        # TODO: Put in docstring
+        container_subelement_count = {}
+        for element in self.elements:
+            if isinstance(element, BlueprintContainer):
+                container_subelement_count[element.blueprint_id] = (
+                    element.count_subelements()
+                )
+
+        # Bypass frozen
+        object.__setattr__(
+            self, "container_subelement_count", container_subelement_count
+        )
+
+    def count_subelements(self) -> int:
+        """
+        Recursivly count the number of subelements in the blueprint
+        :return: The total number of (nested) subelements in the blueprint
+        """
+        element_count = 0
+        for element in self.elements:
+            if isinstance(element, BlueprintContainer):
+                element_count += element.count_subelements()
+            else:
+                element_count += 1
+        return element_count
 
     def get_new_container(self, width_px: float, height_px: float) -> Container:
         """

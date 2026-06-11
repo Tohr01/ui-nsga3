@@ -31,7 +31,7 @@ class SymmetryScorer(Scorer):
         g_ur = [0.0, 0.0, 0.0, 0.0]
         g_ll = [0.0, 0.0, 0.0, 0.0]
         g_lr = [0.0, 0.0, 0.0, 0.0]
-        MAX_NORM = np.sqrt(0.5**2 + 0.5**2 + 1.0**2 + 1.0**2)
+
         for element in container.elements:
             pos = element.position
             size = element.size

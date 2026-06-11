@@ -3,6 +3,10 @@ from ui.container import Container
 
 
 class MinSizeScorer(Scorer):
+    """
+    Penalizes containers that have elements below a certain width and height threshold.
+    """
+
     # NOTE: Non inclusive
     MIN_WIDTH: float
     MIN_HEIGHT: float

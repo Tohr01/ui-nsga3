@@ -36,13 +36,14 @@ footer = BlueprintContainer(
             },
         ),
     ],
+    # TODO: Maybe add Balance Scorer?
     scorers=[
         (MinTouchTargetSizeScorer(), 1.0),
         (SymmetryScorer(SymmetryMode.RADIAL), 1.5),
         (BalanceScorer(), 1.0),
         (EquilibriumScorer(), 1.0),
         (SameTextSizeScorer(), 1.0),
-        (ProximityScorer([["Imprint Text", "Dataprivacy Text", "TaC Text"]]), 1.0),
+        (ProximityScorer([["Imprint Text", "Dataprivacy Text", "TaC Text"]]), 3.0),
         (AxisAlignScorer(), 1.0),
     ],
 )
