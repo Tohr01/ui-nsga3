@@ -18,6 +18,8 @@ from blueprints.ecommerce_prototype import interface_blueprint
 from constants import BASE_LOGGER_NAME, OUTPUT_DIR
 from optimization.nsga3 import run_nsga3_optimization
 from rendering.renderer import HTMLRenderer
+from scoring.constraints.min_size import MinSizeScorer
+from scoring.constraints.padding import PaddingScorer
 
 parser = ArgumentParser(
     prog="ui-nsga3",
@@ -77,6 +79,10 @@ if __name__ == "__main__":
         n_gen=args.generations,
         min_pop_size=args.min_pop_size,
         seed=SEED,
+        constraints=[
+            PaddingScorer(padding=0.01),
+            MinSizeScorer(min_width=0.0, min_height=0.0),
+        ],
     )
 
     # Write optimized containers to HTML files

@@ -17,6 +17,7 @@ from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.sampling import ContainerSampling
+from scoring.scorer import Scorer
 from ui.blueprint import BlueprintContainer, RootBlueprint
 from ui.canvas_context import CanvasContext
 from ui.components.placeholder_container import PlaceholderContainer
@@ -93,6 +94,7 @@ def run_nsga3_optimization(
     n_gen: int,
     min_pop_size: int,
     seed: Optional[int],
+    constraints: list[Scorer] = [],
 ) -> dict[str, Container]:
     """
     Runs the NSGA-III optimization algorithm on the given root blueprint.
@@ -105,6 +107,7 @@ def run_nsga3_optimization(
     :param n_gen: The number of generations to run optimization for
     :param min_pop_size: The minimum population size (will be used for reference direction generation)
     :param seed: The random seed to use for optimization (pymoo minimize function)
+    :param constraints: A list of constraint scorers to apply during optimization (ieq constraints)
 
     :return: A dictionary of blueprint_id to optimized Container
     """
@@ -131,7 +134,7 @@ def run_nsga3_optimization(
         sampling = ContainerSampling(width_px, height_px, current_blueprint)
         crossover = ContainerCrossover()
         mutation = ContainerMutation(mutation_rate=0.1)
-        problem = ContainerProblem(current_blueprint.scorers)
+        problem = ContainerProblem(current_blueprint.scorers, constraints)
         callback = ContainerCallback()
         bounds_repair = CanvasBoundsRepair()
 
