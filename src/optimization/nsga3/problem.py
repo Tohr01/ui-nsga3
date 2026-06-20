@@ -6,7 +6,7 @@ from scoring.scorer import Scorer
 
 class ContainerProblem(Problem):
     scorers: list[tuple[Scorer, float]]
-    contraints: list[Scorer]
+    constraints: list[Scorer]
 
     def __init__(
         self,
@@ -17,7 +17,7 @@ class ContainerProblem(Problem):
         super().__init__(n_var=1, n_obj=len(scorers), n_ieq_constr=len(constraints))
         # Init scorers
         self.scorers = [(scorer, weight) for scorer, weight in scorers]
-        self.contraints = constraints
+        self.constraints = constraints
 
     def _evaluate(self, x, out, *args, **kwargs):
         objectives = []
@@ -29,7 +29,7 @@ class ContainerProblem(Problem):
             objectives.append(scores)
 
             container_constraint_violations = [
-                constraint.score(container) for constraint in self.contraints
+                constraint.score(container) for constraint in self.constraints
             ]
             constraints.append(container_constraint_violations)
         out["F"] = np.array(objectives, dtype=float)
