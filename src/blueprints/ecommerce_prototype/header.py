@@ -6,7 +6,8 @@ from scoring.element_order import ElementOrderScorer
 from scoring.gestalt_principles.proximity import ProximityScorer
 from scoring.max_icon_size import MaxIconSizeScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
-from scoring.text.same_text_size import SameTextSizeScorer
+from scoring.text.golden_ratio_text_size import GoldenRatioTextSizeScorer
+from scoring.text.min_font_size import MinFontSizeScorer
 from ui.blueprint import BlueprintContainer
 from ui.components.aspect_image import AspectImage, AspectImageConfig, ImageType
 from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
@@ -97,8 +98,9 @@ header = BlueprintContainer(
         ),
         (MinTouchTargetSizeScorer(), 1.0),
         (MaxIconSizeScorer(), 1.0),
-        (SameTextSizeScorer(), 1.0),
+        (GoldenRatioTextSizeScorer(), 1.0),
         (AxisAlignScorer(), 2.0),
         (SymmetryScorer(SymmetryMode.RADIAL), 1.5),
+        (MinFontSizeScorer(), 1.0),
     ],
 )

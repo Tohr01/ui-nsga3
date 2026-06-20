@@ -20,8 +20,8 @@ from optimization.nsga3.sampling import ContainerSampling
 from ui.blueprint import BlueprintContainer, RootBlueprint
 from ui.canvas_context import CanvasContext
 from ui.components.placeholder_container import PlaceholderContainer
-from ui.components.singleline_text import SingleLineText
 from ui.container import Container
+from ui.element import TextlikeElement
 from ui.text_measure import TextMeasure
 
 logger = get_new_logger("optimization.nsga3.optimizer")
@@ -149,7 +149,7 @@ def run_nsga3_optimization(
         text_measure.set_canvas_dim(width_px, height_px)
 
         for element_type, element_args in current_blueprint.flattend_elements:
-            if element_type in [SingleLineText]:
+            if issubclass(element_type, TextlikeElement):
                 text_measure.precache_font_sizes(
                     text=element_args["text"],
                     font_family=element_args.get("font_family", DEFAULT_FONT_FAMILY),

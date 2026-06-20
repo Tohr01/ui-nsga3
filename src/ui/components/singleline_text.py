@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Optional
 
 from numpy import clip
@@ -11,34 +10,18 @@ from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
 from rendering.util import styles_dict_to_str
-from ui.element import ElementConfig, UIElement
+from ui.element import TextlikeElement, TextlikeElementConfig
 from ui.text_measure import TextMeasure
-
-# TODO: Add enum type for differnt styles of text elements like paragraph, header etc.
-
-
-class TextType(StrEnum):
-    HEADER = "header"
-    SUBHEADER = "subheader"
-    PARAGRAPH = "paragraph"
-    LABEL = "label"
-    CAPTION = "caption"
-    OTHER = "other"
 
 
 @dataclass
-class SingleLineTextConfig(ElementConfig):
-    text_type: TextType = TextType.OTHER
-    is_multiline: bool = False  # NOTE: Currently not used
+class SingleLineTextConfig(TextlikeElementConfig):
     enable_font_size_crossover: bool = True
     enable_font_size_mutation: bool = True
 
 
 # NOTE: Should support multiple lines currently by using <br> as line break
-class SingleLineText(UIElement):
-    text: str
-    font_size: int
-    font_family: str
+class SingleLineText(TextlikeElement):
     _max_font_size: int
     config: SingleLineTextConfig  # type: ignore[override]
 

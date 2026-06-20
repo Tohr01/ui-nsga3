@@ -1,14 +1,17 @@
+from warnings import deprecated
+
 from scoring.scorer import Scorer
 from ui.components.singleline_text import SingleLineText
 from ui.container import Container
 
 
-# TODO: Docstring link TextType enum in singleline_text.py
+# TODO: Docstring link TextType enum
+@deprecated("Deprecated in favor of GoldenRatioTextSizeScorer")
 class SameTextSizeScorer(Scorer):
     """
     Penalizes containers that have text elements of varying sizes.
     Will only penalize text elements of the same type (e.g. paragraphs)
-    See TextType in ui/components/singleline_text.py for more details on text types.
+    See TextType in ui/enums.py for more details on text types.
 
     Source: https://b13.com/blog/designing-with-type-a-guide-to-ui-font-size-guidelines
     Latest accessed: 2026-05-06

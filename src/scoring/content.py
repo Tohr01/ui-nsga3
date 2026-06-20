@@ -1,9 +1,11 @@
 from math import sqrt
+from warnings import deprecated
 
 from scoring.scorer import Scorer
 from ui.container import Container
 
 
+@deprecated("Currently unused")
 class ContentScorer(Scorer):
     def score(self, container: Container) -> float:
         penalty = 0
@@ -31,5 +33,5 @@ class ContentScorer(Scorer):
         y_penalty = abs(y - y_optimal)
         h_penalty = abs(h - h_optimal)
 
-        penalty += sqrt(x_penalty**2 + y_penalty**2 + w_penalty**2 + h_penalty**2)
+        penalty += sqrt(x_penalty**2 + y_penalty**2 + h_penalty**2 + w_penalty**2)
         return penalty

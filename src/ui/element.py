@@ -7,6 +7,7 @@ from numpy import clip
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.reproducible import Reproducible
+from ui.enums import TextType
 
 
 @dataclass
@@ -65,3 +66,16 @@ class UIElement(Reproducible, ABC):
         # Clamp position
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)
+
+
+@dataclass
+class TextlikeElementConfig(ElementConfig):
+    text_type: TextType = TextType.OTHER
+
+
+# TODO: Maybe insert _max_font_size and related vars
+class TextlikeElement(UIElement):
+    text: str
+    font_size: int
+    font_family: str
+    config: TextlikeElementConfig  # type: ignore[override]
