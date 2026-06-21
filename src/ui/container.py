@@ -9,8 +9,6 @@ from ui.element import UIElement
 class Container(Reproducible):
     blueprint_id: str
 
-    # TODO: Maybe use relative units instantly
-
     # Absolute dimensions of container canvas in pixels
     width_px: float
     height_px: float

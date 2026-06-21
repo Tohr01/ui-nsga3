@@ -36,16 +36,11 @@ class Size(Reproducible):
             normal_distribution_mutate(value=self.height, mutation_rate=mutation_rate),
         )
 
-    # TODO: Maybe precompute and store as instance var
     def area(self) -> float:
         """
         Calculates the area of the size.
         """
         return self.width * self.height
-
-    def visual_area(self, aspect_x: float, aspect_y: float) -> float:
-        # TODO: Comment
-        return self.width * aspect_x * self.height * aspect_y
 
     def get_wh(self) -> tuple[float, float]:
         return self.width, self.height
