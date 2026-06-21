@@ -8,15 +8,16 @@ import PIL.Image as Image
 
 def img_path_to_base64_str(img_path: Union[str, Path]) -> str:
     """
-    Open image using Pillow, save as png, return b64 string
+    Open image using Pillow, save as webp, return b64 string
     :param img_path: Path to the image file
     :return: Base64 string of the image
     """
     with Image.open(img_path) as img:
         buffered = BytesIO()
-        # TODO: Maybe change to JPEG
-        img.save(buffered, format="PNG")
-        return f"data:image/png;base64,{base64.b64encode(buffered.getvalue()).decode()}"
+        img.save(buffered, format="webp")
+        return (
+            f"data:image/webp;base64,{base64.b64encode(buffered.getvalue()).decode()}"
+        )
 
 
 def img_path_to_aspect_ratio(img_path: Union[str, Path]) -> float:
