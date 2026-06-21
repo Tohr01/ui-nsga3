@@ -120,7 +120,6 @@ def run_nsga3_optimization(
     ]
     optimized_containers: dict[str, Container] = {}
 
-    text_measure = TextMeasure.get_instance()
     while queue:
         width_px, height_px, current_blueprint = queue.pop(0)
         logger.info(
@@ -148,9 +147,8 @@ def run_nsga3_optimization(
             )
             continue
 
-        # Set canvas dimensions for text measurement
-        text_measure.set_canvas_dim(width_px, height_px)
-
+        # Cache text measurement for all text elements
+        text_measure = TextMeasure.get_instance()
         for element_type, element_args in current_blueprint.flattend_elements:
             if issubclass(element_type, TextlikeElement):
                 text_measure.precache_font_sizes(

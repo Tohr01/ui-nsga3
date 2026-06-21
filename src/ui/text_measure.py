@@ -4,11 +4,9 @@ from playwright.sync_api import Browser, Page, Playwright, sync_playwright
 
 from constants import MIN_FONT_SIZE_PX
 from logger import get_new_logger
+from ui.canvas_context import CanvasContext
 
 logger = get_new_logger("ui.text_measure")
-
-# TODO: Maybe refactor such that the TextMeasure class uses
-# the CanvasContext under the hood to get the canvas dimensions
 
 
 class TextMeasure:
@@ -25,24 +23,45 @@ class TextMeasure:
     _max_fitting_cache: dict[tuple[str, str], int]
 
     def __init__(self):
+        # Playwright setup
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch()
         self._page = self._browser.new_page()
+        # Caches
         self._size_cache = {}
         self._max_fitting_cache = {}
-        self._canvas_w_px = 1
-        self._canvas_h_px = 1
+        # Placeholder canvas dimension
+        self._canvas_w_px = -1
+        self._canvas_h_px = -1
+        # Set canvas dimensions in px
+        self._update_canvas_dim()
 
     @classmethod
     def get_instance(cls) -> "TextMeasure":
+        """
+        Returns singleton instance of TextMeasure.
+        On call will check if canvas dimensions have changed (see CanvasContext) and update if necessary (see _update_canvas_dim)
+        :return: Singleton TextMeasure instance
+        """
         if cls._instance is None:
             cls._instance = TextMeasure()
+
+        cls._instance._update_canvas_dim()
         return cls._instance
 
-    def set_canvas_dim(self, w_px: float, h_px: float):
-        self._canvas_w_px = w_px
-        self._canvas_h_px = h_px
-        self.clear_cache()
+    def _update_canvas_dim(self):
+        """
+        Get new canvas dimensions (denominated in px) and if they differ from the current dimensions, update them and clear caches
+        as the current cached dimensions would be invalid (see clear_cache)
+        """
+        new_width, new_height = CanvasContext.get_instance().get_wh()
+        if self._canvas_w_px != new_width or self._canvas_h_px != new_height:
+            logger.debug(
+                f"Canvas dim changed from ({self._canvas_w_px}, {self._canvas_h_px}) to ({new_width}, {new_height}). Clearing caches..."
+            )
+            self.clear_cache()
+        self._canvas_w_px = new_width
+        self._canvas_h_px = new_height
 
     def get_dim(
         self,
@@ -122,5 +141,9 @@ class TextMeasure:
         return self._max_fitting_cache[key]
 
     def close(self):
+        """
+        Close and stop playwright instance and reset singleton instance
+        """
         self._browser.close()
         self._pw.stop()
+        self._instance = None

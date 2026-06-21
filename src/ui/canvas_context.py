@@ -18,3 +18,9 @@ class CanvasContext:
         self.width_px = width_px
         self.height_px = height_px
         self.aspect_ratio = width_px / height_px
+
+    def get_wh(self) -> tuple[float, float]:
+        assert hasattr(self, "width_px") and hasattr(self, "height_px"), (
+            "Canvas dimensions not set. Call set_canvas_dim() first."
+        )
+        return self.width_px, self.height_px
