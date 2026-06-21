@@ -1,8 +1,9 @@
 from scoring.aesthetic.balance import BalanceScorer
 from scoring.aesthetic.equilibrium import EquilibriumScorer
 from scoring.aesthetic.symmetry import SymmetryScorer
-from scoring.axis_align import Axis, AxisAlignScorer
-from scoring.element_order import ElementOrderScorer, OrderDirection
+from scoring.axis_align import AxisAlignScorer
+from scoring.element_order import ElementOrderScorer
+from scoring.enums import Axis
 from scoring.gestalt_principles.proximity import ProximityScorer
 from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.screen_space_utilize import ScreenSpaceUtilizationScorer
@@ -81,7 +82,7 @@ product_details = BlueprintContainer(
         (
             ElementOrderScorer(
                 ["Headline", "Stars", "Price", "Buy Button", "Product Description"],
-                OrderDirection.Y,
+                Axis.Y,
             ),
             1.0,
         ),

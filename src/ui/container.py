@@ -12,9 +12,6 @@ class Container(Reproducible):
     # Absolute dimensions of container canvas in pixels
     width_px: float
     height_px: float
-    # Relative dimensions of container canvas as aspect ratio to max dimension (width or height)
-    width_aspect_ratio: float
-    height_aspect_ratio: float
 
     label: str
     elements: list[UIElement]
@@ -31,9 +28,6 @@ class Container(Reproducible):
         self.blueprint_id = blueprint_id
         self.width_px = width_px
         self.height_px = height_px
-        # TODO: Maybe do not calculate always on init but precalulate in sampling
-        self.width_aspect_ratio = width_px / max(height_px, width_px)
-        self.height_aspect_ratio = height_px / max(width_px, height_px)
         self.label = label
         self.elements = elements
 
