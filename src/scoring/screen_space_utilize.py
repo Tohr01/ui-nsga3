@@ -4,12 +4,15 @@ from ui.container import Container
 
 class ScreenSpaceUtilizationScorer(Scorer):
     """
-    This scorer penalizes unused screen space (width*height)
+    This scorer penalizes unused screen space
     It calculates the total area covered by the elements and returns a penality based on
     the unused area (1 - min(1.0, area_covered)) to ensure the score is between 0 and 1.
 
-    Based on source: https://www.nngroup.com/articles/utilize-available-screen-space/
-    Latest accessed: 2026-05-13
+    References:
+    -----------
+    [1] J. Nielsen, “Utilize available screen space,” Nielsen Norman Group,
+        Apr. 19, 2018. https://www.nngroup.com/articles/utilize-available-screen-space/
+        (accessed May 13, 2026).
     """
 
     def score(self, container: Container) -> float:

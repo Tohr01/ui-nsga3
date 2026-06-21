@@ -7,8 +7,14 @@ from ui.container import Container
 class EquilibriumScorer(Scorer):
     """
     Scores a Container based on the equilibrium of its elements.
-    Forumla is based on the paper "Aesthetic Measures for Assessing Graphic Screens"
-    See 3.2 https://www.researchgate.net/publication/220587460_Aesthetic_Measures_for_Assessing_Graphic_Screens
+
+    References:
+    -----------
+    [1] D. Ngo, A. Samsudin und R. Abdullah,
+        „Aesthetic Measures for Assessing Graphic Screens“,
+        Journal Of Information Science And Engineering,
+        Bd. 16, Nr. 1, S. 97–116, Jan. 2000,
+        doi: 10.6688/jise.2000.16.1.4.
     """
 
     def score(self, container: Container) -> float:
@@ -36,8 +42,6 @@ class EquilibriumScorer(Scorer):
 
         em_x = x_center - x_0
         em_y = y_center - y_0
-
-        # TODO: Maybe return (em_x + em_y) / 2
 
         # Return the distance from perfect equilibrium (0, 0) as penalty
         num_elements = len(container.elements)

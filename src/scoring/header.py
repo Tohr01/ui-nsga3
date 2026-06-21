@@ -12,7 +12,8 @@ class HeaderScorer(Scorer):
     2. Header spans the full width of the container (ebay.de & amazon.de)
     3. Header has a height between 98.688px (ebay.de) and 99px (amazon.de)
 
-    Sources:
+    References:
+    -----------
     - amazon.de (Latest accessed: 2026-06-09)
     - ebay.de (Latest accessed: 2026-06-09)
 

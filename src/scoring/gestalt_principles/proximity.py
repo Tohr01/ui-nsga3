@@ -11,12 +11,20 @@ from ui.container import Container
 
 class ProximityScorer(Scorer):
     """
-    Scores a Container based on the proximity of its elements. Based on the principle of proximity in gestalt psychology.
+    Scores a Container based on the proximity of its elements.
+    Based on the principle of proximity in gestalt psychology. [1, 2]
+    Based on the MST sum of the distance graph of the elements in each cluster. [2]
 
-    See: https://uxdesign.cc/whitespace-in-ui-design-44e332c8e4a
-    Latest accessed: 2026-05-25
-
-    Based on the MST sum of the distance graph of the elements in each cluster.
+    References:
+    -----------
+    [1] Y. Q. Lim, “Applying white space in UI design,”
+        UX Collective, Feb. 03, 2021.
+        https://uxdesign.cc/whitespace-in-ui-design-44e332c8e4a (accessed May 25, 2026).
+    [2] C. T. Zahn,
+        “Graph-Theoretical Methods for detecting and Describing gestalt clusters,”
+        IEEE Transactions on Computers,
+        vol. C–20, no. 1, pp. 68–86, Jan. 1971,
+        doi: 10.1109/t-c.1971.223083.
     """
 
     clusters: list[list[str]]

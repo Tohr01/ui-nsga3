@@ -1,14 +1,8 @@
-from enum import StrEnum
-
 from scipy.stats import kendalltau
 
+from scoring.enums import Axis
 from scoring.scorer import Scorer
 from ui.container import Container
-
-
-class OrderDirection(StrEnum):
-    X = "x"
-    Y = "y"
 
 
 class ElementOrderScorer(Scorer):
@@ -19,14 +13,14 @@ class ElementOrderScorer(Scorer):
     """
 
     element_order_labels: list[str]
-    order_direction: OrderDirection
+    order_direction: Axis
 
     expected_ranks: dict[str, int]
 
     def __init__(
         self,
         element_order_labels: list[str],
-        order_direction: OrderDirection = OrderDirection.X,
+        order_direction: Axis = Axis.X,
     ) -> None:
         self.element_order_labels = element_order_labels
         self.expected_ranks = {
@@ -39,9 +33,9 @@ class ElementOrderScorer(Scorer):
         for element in container.elements:
             if element.label in self.element_order_labels:
                 match self.order_direction:
-                    case OrderDirection.X:
+                    case Axis.X:
                         element_positions.append((element.label, element.position.x))
-                    case OrderDirection.Y:
+                    case Axis.Y:
                         element_positions.append((element.label, element.position.y))
 
         if len(element_positions) < 2:

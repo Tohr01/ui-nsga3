@@ -6,7 +6,6 @@ from ui.element import TextlikeElement
 from ui.enums import TextType
 
 
-# FIX: Docstring to make consistent with other scorers source credit
 class GoldenRatioTextSizeScorer(Scorer):
     """
     Let φ be the golden ratio.
@@ -19,9 +18,16 @@ class GoldenRatioTextSizeScorer(Scorer):
     FOOTNOTE = φ^(-1) * X
     OTHER = φ^0 * X
 
-    Sources (Latest accessed: 2026-06-16):
-    • https://cieden.com/book/sub-atomic/typography/different-type-scale-types
-    • https://www.nngroup.com/articles/golden-ratio-ui-design/
+    References:
+    -----------
+    [1] K. Khmelyk, “What different types of typographic scales exist?,”
+        Cieden, Jul. 08, 2024.
+        https://cieden.com/book/sub-atomic/typography/different-type-scale-types
+        (accessed Jun. 16, 2026).
+    [2] K. Gordon, “The Golden Ratio and User-Interface design,”
+        Nielsen Norman Group, Oct. 31, 2021.
+        https://www.nngroup.com/articles/golden-ratio-ui-design/
+        (accessed Jun. 16, 2026).
     """
 
     # NOTE: Change when changing the text type in enums.py

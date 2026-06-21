@@ -12,7 +12,8 @@ class FooterScorer(Scorer):
     2. Footer spans the full width of the container (ebay.de & amazon.de)
     3. Footer has a height between 83px (ebay.de) and 76px (amazon.de)
 
-    Sources:
+    References:
+    -----------
     - amazon.de (Latest accessed: 2026-06-09)
     - ebay.de (Latest accessed: 2026-06-09)
 

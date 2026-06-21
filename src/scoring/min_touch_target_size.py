@@ -6,8 +6,12 @@ class MinTouchTargetSizeScorer(Scorer):
     Scores a container based on how many of its elements are below the minimum, recommended
     touch target size of 44px x 44px.
 
-    Source: https://www.w3.org/WAI/WCAG21/Understanding/target-size
-    Latest accessed: 2026-05-02
+    References:
+    -----------
+    [1] Accessibility Guidelines Working Group,
+        “Understanding Success Criterion 2.5.5: Target Size,” Web Accessibility Initiative (WAI),
+        May 11, 2026. https://www.w3.org/WAI/WCAG21/Understanding/target-size
+        (accessed May 02, 2026).
     """
 
     def score(self, container) -> float:

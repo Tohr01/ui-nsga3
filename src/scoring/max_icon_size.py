@@ -7,12 +7,15 @@ from ui.container import Container
 class MaxIconSizeScorer(Scorer):
     """
     Penalizes a container based on how many of its icon are above a certain size threshold.
-    The size threshold is set at >= 48px based on the design guidelines from michelin
+    The size threshold is set at >= 48px based on the design guidelines from Michelin
 
     "Don’t use icons over 32px, icons are meant to be used at small scale, starting 48px icons will start to look like pictograms"
 
-    Source: https://designsystem.michelin.com/icons/brand/icons-pictograms/icons/usage
-    Latest accessed: 2026-05-20
+    References:
+    -----------
+    [1] Michelin, “Icons - Usage,” Michelin Design System.
+        https://designsystem.michelin.com/icons/brand/icons-pictograms/icons/usage
+        (accessed May 20, 2026).
     """
 
     def score(self, container: Container) -> float:

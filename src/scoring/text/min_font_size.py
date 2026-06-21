@@ -16,8 +16,11 @@ class MinFontSizeScorer(Scorer):
     NOTE: It is not exactly clear what a "text block" is, so we will assume it means any text element
     except footnotes in our case
 
-    Sources (Latest accessed: 2026-06-16):
-    https://handreichungen.bfit-bund.de/accessible-uie/schrift.html
+    References:
+    -----------
+    [1] BFIT-Bund AG02 Software, “Font - Accessible design of user interface elements,”
+        Überwachungsstelle Des Bundes Für Barrierefreiheit Von Informationstechnik, Mar. 24, 2025.
+        https://handreichungen.bfit-bund.de/accessible-uie/schrift.html (accessed Jun. 16, 2026).
     """
 
     _min_font_size_px_by_type = {

@@ -1,24 +1,20 @@
-from enum import StrEnum
-
 import numpy as np
 
+from scoring.enums import Axis
 from scoring.scorer import Scorer
 from ui.container import Container
-
-
-# TODO: Others scorers use a similar axis enum
-# Unify in single file
-class Axis(StrEnum):
-    X = "x"
-    Y = "y"
 
 
 class AxisAlignScorer(Scorer):
     """
     Penalizes variance in the center positions of elements along a specified axis (x or y).
 
-    Based on source: https://ixdf.org/literature/topics/visual-alignment#center_alignment_on_axis-18
-    Latest accessed: 2026-05-26
+    References:
+    -----------
+    [1] Interaction Design Foundation, “What is Visual Alignment?,”
+        IxDF - Interaction Design Foundation, Mar. 02, 2026.
+        https://ixdf.org/literature/topics/visual-alignment#center_alignment_on_axis-18
+        (accessed May 26, 2026).
     """
 
     align_axis: Axis

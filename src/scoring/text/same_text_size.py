@@ -5,7 +5,6 @@ from ui.components.singleline_text import SingleLineText
 from ui.container import Container
 
 
-# TODO: Docstring link TextType enum
 @deprecated("Deprecated in favor of GoldenRatioTextSizeScorer")
 class SameTextSizeScorer(Scorer):
     """

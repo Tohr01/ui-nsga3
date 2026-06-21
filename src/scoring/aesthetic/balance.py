@@ -4,12 +4,17 @@ from scoring.scorer import Scorer
 from ui.container import Container
 
 
-# TODO: Change to non researchgate source
 class BalanceScorer(Scorer):
     """
     Scores a Container based on the balance of its elements.
-    Forumla is based on the paper "Aesthetic Measures for Assessing Graphic Screens"
-    See 3.1 https://www.researchgate.net/publication/220587460_Aesthetic_Measures_for_Assessing_Graphic_Screens
+
+    References:
+    -----------
+    [1] D. Ngo, A. Samsudin und R. Abdullah,
+        „Aesthetic Measures for Assessing Graphic Screens“,
+        Journal Of Information Science And Engineering,
+        Bd. 16, Nr. 1, S. 97–116, Jan. 2000,
+        doi: 10.6688/jise.2000.16.1.4.
     """
 
     def score(self, container: Container) -> float:
