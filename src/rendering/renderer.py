@@ -50,8 +50,6 @@ class HTMLRenderer:
         """
         Render a Container to an HTML element.
         """
-        # TODO: Todo recursive rendering of nested containers
-
         output_path.parent.mkdir(parents=True, exist_ok=True)
         container_html_str = container.to_html_element(containers=containers)
         with open(output_path, "w") as f:
