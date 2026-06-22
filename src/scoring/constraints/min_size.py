@@ -7,11 +7,15 @@ class MinSizeScorer(Scorer):
     Penalizes containers that have elements below a certain width and height threshold.
     """
 
-    # NOTE: Non inclusive
     MIN_WIDTH: float
     MIN_HEIGHT: float
 
     def __init__(self, min_width: float = 0.0, min_height: float = 0.0):
+        """
+        Initializes the MinSizeScorer with specified minimum width and height thresholds.
+        :param min_width: Minimum width threshold for elements (default: 0.0) (non inclusive)
+        :param min_height: Minimum height threshold for elements (default: 0.0) (non inclusive)
+        """
         self.MIN_WIDTH = min_width
         self.MIN_HEIGHT = min_height
 

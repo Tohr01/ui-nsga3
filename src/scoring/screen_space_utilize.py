@@ -17,7 +17,8 @@ class ScreenSpaceUtilizationScorer(Scorer):
 
     def score(self, container: Container) -> float:
         # NOTE: Because our iequality contraints flags overlapping elements as illegal we
-        # sum the area of each element
+        # sum the area of each element. Otherwise we would have to calculate the overlapping
+        # union area
         area_covered = sum(
             w * h for element in container.elements for w, h in [element.size.get_wh()]
         )

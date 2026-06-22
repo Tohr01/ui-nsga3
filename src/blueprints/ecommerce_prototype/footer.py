@@ -44,7 +44,6 @@ footer = BlueprintContainer(
             },
         ),
     ],
-    # TODO: Maybe add Balance Scorer?
     scorers=[
         (MinTouchTargetSizeScorer(), 1.0),
         (SymmetryScorer(SymmetryMode.RADIAL), 1.5),
