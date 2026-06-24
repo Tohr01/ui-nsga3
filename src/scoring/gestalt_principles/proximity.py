@@ -76,4 +76,6 @@ class ProximityScorer(Scorer):
             max(e1.position.y, e2.position.y)
             - min(e1.position.y + e1.size.height, e2.position.y + e2.size.height),
         )
-        return math.hypot(dx, dy)
+        return math.hypot(dx, dy) / math.sqrt(
+            2
+        )  # Normalize to [0, 1] because amx distance is sqrt(2) diagonally

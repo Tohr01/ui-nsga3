@@ -30,6 +30,10 @@ class HeaderScorer(Scorer):
         # PERF: Caching
         min_header_height = self.MIN_HEADER_HEIGHT_PX / container.height_px
         max_header_height = self.MAX_HEADER_HEIGHT_PX / container.height_px
+
+        MAX_PENALTY = sqrt(
+            1 + 1 + max(min_header_height, 1 - max_header_height) ** 2 + 1
+        )
         for element in container.elements:
             if element.label == "Header":
                 x, y = element.position.get_xy()
@@ -37,7 +41,7 @@ class HeaderScorer(Scorer):
                 # Full width and height in [min_header_height; max_header_height]
                 w_penalty = 1 - w
                 h_penalty = max(0, min_header_height - h, h - max_header_height)
-                penalty += sqrt(x**2 + y**2 + h_penalty**2 + w_penalty**2)
+                penalty += sqrt(x**2 + y**2 + h_penalty**2 + w_penalty**2) / MAX_PENALTY
                 count_header_elements += 1
 
         return penalty / count_header_elements if count_header_elements > 0 else 0.0

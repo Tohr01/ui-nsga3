@@ -1,4 +1,5 @@
 from enum import Enum
+from math import sqrt
 
 import numpy as np
 
@@ -26,11 +27,16 @@ class SymmetryScorer(Scorer):
     """
 
     mode: SymmetryMode
+    MAX_PENALTY = sqrt(0.5**2 + 0.5**2 + 1.0**2 + 1.0**2)
 
     def __init__(self, mode: SymmetryMode = SymmetryMode.VERTICAL):
         self.mode = mode
 
     def score(self, container: Container) -> float:
+        num_elements = len(container.elements)
+        if num_elements == 0:
+            return 0.0
+
         x_center = 0.5
         y_center = 0.5
         g_ul = [0.0, 0.0, 0.0, 0.0]
@@ -85,6 +91,5 @@ class SymmetryScorer(Scorer):
         else:
             raise ValueError(f"Unknown symmetry mode: {self.mode}")
 
-        return (
-            penalty / len(container.elements) if len(container.elements) != 0 else 0.0
-        )
+        penalty_norm_elements = penalty / num_elements
+        return penalty_norm_elements / self.MAX_PENALTY

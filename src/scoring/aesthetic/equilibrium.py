@@ -17,7 +17,10 @@ class EquilibriumScorer(Scorer):
         doi: 10.6688/jise.2000.16.1.4.
     """
 
+    MAX_PENALTY = sqrt(0.5**2 + 0.5**2)
+
     def score(self, container: Container) -> float:
+        # NOTE: WHEN CHANGING THIS CHANGE NORMALIZATION
         x_center = 0.5
         y_center = 0.5
 
@@ -44,5 +47,4 @@ class EquilibriumScorer(Scorer):
         em_y = y_center - y_0
 
         # Return the distance from perfect equilibrium (0, 0) as penalty
-        num_elements = len(container.elements)
-        return sqrt(em_x**2 + em_y**2) / num_elements if num_elements != 0 else 0.0
+        return sqrt(em_x**2 + em_y**2) / self.MAX_PENALTY  # Normalize to [0, 1]

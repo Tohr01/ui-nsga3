@@ -17,7 +17,17 @@ class BalanceScorer(Scorer):
         doi: 10.6688/jise.2000.16.1.4.
     """
 
+    # Max contribution per element is 0.5 (given no element is out of bounds)
+    # area * |x_center - cx| <= 0.5
+    # If all elements are e.g. in wl x_balance = num_elements * 0.5 (same for y)
+    MAX_PENALTY = sqrt(2) / 2
+
     def score(self, container: Container) -> float:
+        num_elements = len(container.elements)
+        if num_elements == 0:
+            return 0.0
+
+        # NOTE: WHEN CHANGING THIS CHANGE NORMALIZATION
         x_center = 0.5
         y_center = 0.5
         wl, wr, wt, wb = 0, 0, 0, 0
@@ -45,9 +55,5 @@ class BalanceScorer(Scorer):
         y_balance = wt - wb
 
         # Return the distance from perfect balance (0, 0) as penalty
-        num_elements = len(container.elements)
-        return (
-            sqrt(x_balance**2 + y_balance**2) / num_elements
-            if num_elements != 0
-            else 0.0
-        )
+        raw_penalty = sqrt(x_balance**2 + y_balance**2) / num_elements
+        return raw_penalty / self.MAX_PENALTY

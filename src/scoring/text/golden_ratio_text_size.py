@@ -74,6 +74,7 @@ class GoldenRatioTextSizeScorer(Scorer):
             )  # Default to 0 (paragraph size)
             target = (golden_ratio**exponent) * avg_x_size
             for element in elements:
-                penalty += abs(element.font_size - target) / avg_x_size
+                penalty += abs(element.font_size - target) / target
 
-        return penalty / len(text_elements)
+        # TODO: Maybe look again into that?
+        return min(penalty / len(text_elements), 1.0)  # Clamp to [0; 1.0]

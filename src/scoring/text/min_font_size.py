@@ -46,6 +46,6 @@ class MinFontSizeScorer(Scorer):
                 text_type, 22
             )  # Default to 22px
             if element.font_size < min_size_px:
-                penalty += max(0.0, min_size_px - element.font_size / min_size_px)
+                penalty += (min_size_px - element.font_size) / min_size_px
 
         return penalty / len(text_elements)
