@@ -1,6 +1,7 @@
 import numpy as np
 from pymoo.util.misc import Sampling
 
+from optimization.nsga3.repair import CanvasBoundsRepair
 from ui.blueprint import BlueprintContainer
 from ui.container import Container
 
@@ -9,17 +10,20 @@ class ContainerSampling(Sampling):
     container_width_px: float
     container_height_px: float
     blueprint: BlueprintContainer
+    repair: CanvasBoundsRepair
 
     def __init__(
         self,
         container_width_px: float,
         container_height_px: float,
         blueprint: BlueprintContainer,
+        repair: CanvasBoundsRepair,
     ) -> None:
         super().__init__()
         self.container_width_px = container_width_px
         self.container_height_px = container_height_px
         self.blueprint = blueprint
+        self.repair = repair
 
     def _do(self, problem, n_samples, *args, random_state=None, **kwargs):
         population = []
@@ -27,9 +31,13 @@ class ContainerSampling(Sampling):
             container = self.get_single_container()
             population.append(container)
 
-        return np.array(population, dtype=Container).reshape(n_samples, 1)
+        X = np.array(population, dtype=Container).reshape(n_samples, 1)
+        # Repair population to ensure all elements are within canvas bounds
+        X = self.repair._do(problem, X)
+        return X
 
     def get_single_container(self) -> Container:
-        return self.blueprint.get_new_container(
+        container = self.blueprint.get_new_container(
             self.container_width_px, self.container_height_px
         )
+        return container
