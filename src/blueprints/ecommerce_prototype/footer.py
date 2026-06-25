@@ -46,11 +46,11 @@ footer = BlueprintContainer(
     ],
     scorers=[
         (MinTouchTargetSizeScorer(), 1.0),
-        (SymmetryScorer(SymmetryMode.RADIAL), 1.5),
+        (SymmetryScorer(SymmetryMode.RADIAL), 1.0),
         (BalanceScorer(), 1.0),
         (EquilibriumScorer(), 1.0),
         (GoldenRatioTextSizeScorer(), 1.0),
-        (ProximityScorer([["Imprint Text", "Dataprivacy Text", "TaC Text"]]), 3.0),
+        (ProximityScorer([["Imprint Text", "Dataprivacy Text", "TaC Text"]]), 1.0),
         (AxisAlignScorer(), 1.0),
         (MinFontSizeScorer(), 1.0),
     ],

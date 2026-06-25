@@ -31,7 +31,7 @@ product_description_text = multiline_text_to_html("""Über die Schuhe:
 • Lorem ipsum dolor sit amet, consectetur adipiscing elit.""")
 
 product_details = BlueprintContainer(
-    label="Product Details",
+    label="Product_Details",
     elements=[
         (
             SingleLineText,
@@ -113,12 +113,13 @@ content = BlueprintContainer(
                 "label": "Product_Image",
             },
         ),
+        # BlueprintContainer(label="Product_Details", elements=[], scorers=[]),
         product_details,
     ],
     scorers=[
         (SymmetryScorer(), 1.0),
         (BalanceScorer(), 1.0),
-        (ScreenSpaceUtilizationScorer(), 2.0),
+        (ScreenSpaceUtilizationScorer(), 1.0),
         (
             ElementOrderScorer(
                 element_order_labels=["Product_Image", "Product_Details"]

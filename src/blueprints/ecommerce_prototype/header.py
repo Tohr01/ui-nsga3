@@ -82,7 +82,7 @@ header = BlueprintContainer(
                     ["Search Icon", "Shopping Cart Icon"],
                 ]
             ),
-            1.5,
+            1.0,
         ),
         (
             ElementOrderScorer(
@@ -99,8 +99,8 @@ header = BlueprintContainer(
         (MinTouchTargetSizeScorer(), 1.0),
         (MaxIconSizeScorer(), 1.0),
         (GoldenRatioTextSizeScorer(), 1.0),
-        (AxisAlignScorer(), 2.0),
-        (SymmetryScorer(SymmetryMode.RADIAL), 1.5),
+        (AxisAlignScorer(), 1.0),
+        (SymmetryScorer(SymmetryMode.RADIAL), 1.0),
         (MinFontSizeScorer(), 1.0),
     ],
 )
