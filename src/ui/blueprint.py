@@ -2,6 +2,8 @@ import uuid
 from dataclasses import dataclass, field
 from typing import Type
 
+import numpy as np
+
 from scoring.scorer import Scorer
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.container import Container
@@ -81,6 +83,23 @@ class BlueprintContainer:
                 for element_type, element_args in self.flattend_elements
             ],
         )
+
+    def get_scorers(self) -> list[Scorer]:
+        """
+        Returns a list of the scorers in the blueprint.
+        :return: list of Scorer instances
+        """
+        return [scorer for scorer, _ in self.scorers]
+
+    def get_normalized_scorer_weight_arr(self) -> np.ndarray:
+        """
+        Returns a numpy array of the normalized weights of the scorers.
+        Higher weight is more important and sum(weights) == 1.0
+        :return: numpy array of normalized weights
+        """
+        weights = np.array([weight for _, weight in self.scorers], dtype=float)
+        weights_sum = weights.sum()
+        return weights / weights_sum if weights_sum != 0 else weights
 
 
 @dataclass(kw_only=True, frozen=True)

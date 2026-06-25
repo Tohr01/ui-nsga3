@@ -3,6 +3,7 @@ from typing import Optional, cast
 
 import numpy as np
 from pymoo.algorithms.moo.unsga3 import UNSGA3
+from pymoo.decomposition.weighted_sum import WeightedSum
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
@@ -32,7 +33,7 @@ def _find_n_dd_partition(n_obj: int, target_points: int) -> int:
     """
     Find the number of partitions for Das-Dennis reference directions given the number of objectives and target points.
     Returns smallest p such that C(n_obj + p - 1, p) >= target_points
-    NOTE: The returned p will not always result in exactly target_points ref dirs!
+    The returned p will not always result in exactly target_points ref dirs!
 
     :param n_obj: The number of objectives
     :param target_points: The target number of reference directions to generate
@@ -57,7 +58,7 @@ def _get_ref_dirs_and_pop_size(
 ) -> tuple[np.ndarray, int]:
     """
     Get reference directions for NSGA-III optimization.
-    The target number of directions is calculated as 48 * n_obj
+    The target number of directions is calculated as 64 * n_obj
     For 1 objective ref dirs not used and pop size is set to max(min_pop_size, target_points)
     For 2-MAX_OBJECTIVES_DAS_DENNIS objectives use Das-Dennis reference directions with the number of partitions calculated to be close to target_points
     For more than 4 objectives use Riesz s-energy reference directions with the number of points set to target_points
@@ -67,7 +68,7 @@ def _get_ref_dirs_and_pop_size(
     :param seed: The random seed to use for reference direction generation (for energy-based reference
     :return: A tuple of (reference directions, population size [multiple of 4])
     """
-    target_points = max(min_pop_size, 48 * n_obj)
+    target_points = max(min_pop_size, 64 * n_obj)
 
     def _round_to_multiple_of_4(x: int) -> int:
         return x if x % 4 == 0 else x + (4 - x % 4)
@@ -130,12 +131,14 @@ def run_nsga3_optimization(
         CanvasContext.get_instance().set_canvas_dim(width_px, height_px)
 
         # Init genetic components for NSGA-III
-        sampling = ContainerSampling(width_px, height_px, current_blueprint)
+        bounds_repair = CanvasBoundsRepair()
+        sampling = ContainerSampling(
+            width_px, height_px, current_blueprint, bounds_repair
+        )
         crossover = ContainerCrossover()
         mutation = ContainerMutation(mutation_rate=0.1)
-        problem = ContainerProblem(current_blueprint.scorers, constraints)
+        problem = ContainerProblem(current_blueprint.get_scorers(), constraints)
         callback = ContainerCallback()
-        bounds_repair = CanvasBoundsRepair()
 
         # We try to optimize an empty container
         # Store random container as the best container for the current blueprint
@@ -170,7 +173,7 @@ def run_nsga3_optimization(
             crossover=crossover,  # type: ignore
             mutation=mutation,  # type: ignore
             repair=bounds_repair,
-            # callback=callback,
+            callback=callback,
             eliminate_duplicates=False,
         )
 
@@ -192,34 +195,21 @@ def run_nsga3_optimization(
                 f"Optimization did not return any solutions for container {current_blueprint.label}"
             )
 
-        # Select the best container based on the following criteria:
         # 1. Containers with lowest constraint violation
         # 2. Among those pick container with best objective values (summing all objectives; minimize)
-        # TODO: HANDLE X etc. one dimensional
-        containers = results.X[:, 0]
-        objective_values = results.F
-        aggr_constraint_violations: np.ndarray = results.CV.flatten()
-        min_constraint_violation_idxs = np.where(
-            aggr_constraint_violations == np.min(aggr_constraint_violations)
-        )[0]
+        # TODO: Remove debugging code
+        import pickle
 
-        summed_objective_values = np.sum(objective_values, axis=1)
-        assert len(summed_objective_values) == len(aggr_constraint_violations), (
-            "Length of summed objective values and aggregated constraint violations must be the same."
+        pickle.dump(
+            {"containers": results.X, "objective_functions": results.F},
+            open(f"results_{current_blueprint.label}.pkl", "wb"),
         )
-        best_container_idx = min_constraint_violation_idxs[
-            np.argmin(summed_objective_values[min_constraint_violation_idxs])
-        ]
 
-        best_container = cast(Container, containers[best_container_idx])
+        weights = current_blueprint.get_normalized_scorer_weight_arr()
+        decomb = WeightedSum()
+        best_container_idx = decomb.do(F=results.F, weights=weights).argmin()
+        best_container = cast(Container, results.X[best_container_idx, 0])
         optimized_containers[best_container.blueprint_id] = best_container
-
-        # TODO: Refactor printing
-        best_container_scores = {
-            (scorer.__class__.__name__, scorer.score(best_container) * weight)
-            for scorer, weight in current_blueprint.scorers
-        }
-        print(best_container.label, best_container_scores)
 
         # Map the container id to the size of the child container
         container_sizes = {}
@@ -247,6 +237,6 @@ def run_nsga3_optimization(
         print("Clearing text measurement cache...")
         text_measure.clear_cache()
 
-    text_measure.close()
+    TextMeasure.get_instance().close()
 
     return optimized_containers
