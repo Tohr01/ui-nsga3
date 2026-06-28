@@ -20,6 +20,7 @@ from optimization.nsga3 import run_nsga3_optimization
 from rendering.renderer import HTMLRenderer
 from scoring.constraints.min_size import MinSizeScorer
 from scoring.constraints.padding import PaddingScorer
+from util import container_optimization_results_to_optimized_containers
 
 parser = ArgumentParser(
     prog="ui-nsga3",
@@ -74,7 +75,7 @@ if __name__ == "__main__":
         np.random.seed(SEED)
 
     # Run optimization
-    optimized_containers = run_nsga3_optimization(
+    container_optimzation_results = run_nsga3_optimization(
         root_blueprint=interface_blueprint,
         n_gen=args.generations,
         min_pop_size=args.min_pop_size,
@@ -83,14 +84,22 @@ if __name__ == "__main__":
             PaddingScorer(padding=0.01),
             MinSizeScorer(min_width=0.0, min_height=0.0),
         ],
+        mutation_rate=0.1,
     )
 
-    # Write optimized containers to HTML files
-    OUTPUT_DIR.mkdir(exist_ok=True)
-    for container in optimized_containers.values():
-        HTMLRenderer.write_container_to_html(
-            container, OUTPUT_DIR / f"{container.label}_optimized.html"
-        )
+    # TODO: REMOVE
+    # pickle the optimization results for later analysis
+    import pickle
+
+    pickle.dump(
+        container_optimzation_results,
+        open(OUTPUT_DIR / "container_optimization_results.pkl", "wb"),
+    )
+
+    # Convert to optimized containers for easier rendering
+    optimized_containers = container_optimization_results_to_optimized_containers(
+        container_optimzation_results
+    )
 
     # Assemble final ui
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]

@@ -91,6 +91,13 @@ class BlueprintContainer:
         """
         return [scorer for scorer, _ in self.scorers]
 
+    def get_scorer_class_names(self) -> list[str]:
+        """
+        Returns a list of the class names of the scorers in the blueprint.
+        :return: list of scorer class names
+        """
+        return [scorer.__class__.__name__ for scorer, _ in self.scorers]
+
     def get_normalized_scorer_weight_arr(self) -> np.ndarray:
         """
         Returns a numpy array of the normalized weights of the scorers.

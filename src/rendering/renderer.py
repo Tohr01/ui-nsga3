@@ -49,6 +49,9 @@ class HTMLRenderer:
     ):
         """
         Render a Container to an HTML element.
+        :param container: The Container to render.
+        :param output_path: The path to write the HTML file to.
+        :param containers: Optional dictionary of containers to render (used for nested/children containers)
         """
         output_path.parent.mkdir(parents=True, exist_ok=True)
         container_html_str = container.to_html_element(containers=containers)

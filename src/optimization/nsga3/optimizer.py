@@ -17,6 +17,7 @@ from optimization.nsga3.crossover import ContainerCrossover
 from optimization.nsga3.mutation import ContainerMutation
 from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
+from optimization.nsga3.result import ContainerOptimizationResult, OptimizedContainer
 from optimization.nsga3.sampling import ContainerSampling
 from scoring.scorer import Scorer
 from ui.blueprint import BlueprintContainer, RootBlueprint
@@ -96,7 +97,8 @@ def run_nsga3_optimization(
     min_pop_size: int,
     seed: Optional[int],
     constraints: list[Scorer] = [],
-) -> dict[str, Container]:
+    mutation_rate: float = 0.1,
+) -> dict[str, ContainerOptimizationResult]:
     """
     Runs the NSGA-III optimization algorithm on the given root blueprint.
     The pymoo minimize function will use the optionally provided seed.
@@ -109,6 +111,7 @@ def run_nsga3_optimization(
     :param min_pop_size: The minimum population size (will be used for reference direction generation)
     :param seed: The random seed to use for optimization (pymoo minimize function)
     :param constraints: A list of constraint scorers to apply during optimization (ieq constraints)
+    :param mutation_rate: The mutation rate to use for the ContainerMutation operator
 
     :return: A dictionary of blueprint_id to optimized Container
     """
@@ -119,7 +122,7 @@ def run_nsga3_optimization(
     queue: list[tuple[float, float, BlueprintContainer]] = [
         (root_blueprint.width_px, root_blueprint.height_px, root_blueprint)
     ]
-    optimized_containers: dict[str, Container] = {}
+    optimized_containers: dict[str, ContainerOptimizationResult] = {}
 
     while queue:
         width_px, height_px, current_blueprint = queue.pop(0)
@@ -138,13 +141,23 @@ def run_nsga3_optimization(
         crossover = ContainerCrossover()
         mutation = ContainerMutation(mutation_rate=0.1)
         problem = ContainerProblem(current_blueprint.get_scorers(), constraints)
-        callback = ContainerCallback()
 
         # We try to optimize an empty container
         # Store random container as the best container for the current blueprint
         if len(current_blueprint.elements) == 0:
-            best_container = sampling.get_single_container()
-            optimized_containers[best_container.blueprint_id] = best_container
+            best_container = OptimizedContainer(
+                container=sampling.get_single_container(), summed_score=0.0
+            )
+            empty_container_optimization_result = ContainerOptimizationResult(
+                blueprint=current_blueprint,
+                pop_size=0,
+                ref_dir_count=0,
+                best_container=best_container,
+                optimized_by_algorithm=False,
+            )
+            optimized_containers[current_blueprint.blueprint_id] = (
+                empty_container_optimization_result
+            )
             logger.info(
                 f"Blueprint {current_blueprint.label} has no elements, storing random container as best"
             )
@@ -162,10 +175,15 @@ def run_nsga3_optimization(
         ref_dirs, pop_size = _get_ref_dirs_and_pop_size(
             n_obj=len(current_blueprint.scorers), min_pop_size=min_pop_size, seed=seed
         )
-        print(
+        logger.info(
             f"Amount of reference directions: {len(ref_dirs)}; Population size: {pop_size}"
         )
 
+        container_optimization_result = ContainerOptimizationResult(
+            blueprint=current_blueprint, pop_size=pop_size, ref_dir_count=len(ref_dirs)
+        )
+
+        callback = ContainerCallback(n_gen, container_optimization_result)
         algorithm = UNSGA3(
             pop_size=pop_size,
             ref_dirs=ref_dirs,
@@ -176,6 +194,8 @@ def run_nsga3_optimization(
             callback=callback,
             eliminate_duplicates=False,
         )
+
+        callback.close()
 
         results = minimize(
             problem=problem,
@@ -205,11 +225,11 @@ def run_nsga3_optimization(
             open(f"results_{current_blueprint.label}.pkl", "wb"),
         )
 
+        # TODO: Dont allow to pick a container with constraint violation > 0
         weights = current_blueprint.get_normalized_scorer_weight_arr()
         decomb = WeightedSum()
         best_container_idx = decomb.do(F=results.F, weights=weights).argmin()
         best_container = cast(Container, results.X[best_container_idx, 0])
-        optimized_containers[best_container.blueprint_id] = best_container
 
         # Map the container id to the size of the child container
         container_sizes = {}
@@ -233,8 +253,21 @@ def run_nsga3_optimization(
 
         queue.extend(children_blueprints)
 
+        # Store best container and optimization result for the current blueprint
+        best_optimized_container = OptimizedContainer(
+            container=best_container, summed_score=results.F[best_container_idx].sum()
+        )
+        container_optimization_result.best_container = best_optimized_container
+        container_optimization_result.execution_time_sec = cast(
+            float, results.exec_time
+        )
+
+        optimized_containers[current_blueprint.blueprint_id] = (
+            container_optimization_result
+        )
+
         # Clear text measurement cache
-        print("Clearing text measurement cache...")
+        logger.info("Clearing text measurement cache...")
         text_measure.clear_cache()
 
     TextMeasure.get_instance().close()
