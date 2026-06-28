@@ -1,5 +1,8 @@
+# TODO: Pin to version
 numpy
 scipy
 pillow
 playwright
 pymoo
+pandas
+tqdm
