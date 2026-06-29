@@ -27,23 +27,15 @@ class ContainerCallback(Callback):
             self.pbar = tqdm(total=self.n_gen, desc="Generations", unit="gen")
         self.pbar.update(1)
 
-        data = {}
-        data["generation"] = algorithm.n_gen
         if algorithm.pop is None:
             raise ValueError("Algorithm population is None. This should not happen.")
 
-        # Objective values
-        F = algorithm.pop.get("F")
-        data["F"] = F
-
-        # Contraint values
-        G = algorithm.pop.get("G")
-        data["G"] = G
-
-        # Aggregated constraint violations
-        CV = algorithm.pop.get("CV")
-        data["CV"] = CV
-
+        data = {
+            "generation": algorithm.n_gen,
+            "F": algorithm.pop.get("F"),  # Objective values
+            "G": algorithm.pop.get("G"),  # Constraint violation
+            "CV": algorithm.pop.get("CV"),  # Aggregated constraint violation
+        }
         # Hypervolume indicator
         # H. Ishibuchi, R. Imada, Y. Setoguchi, and Y. Nojima,
         # “How to specify a reference point in hypervolume calculation for fair performance comparison,”
@@ -57,7 +49,7 @@ class ContainerCallback(Callback):
         self.optimization_result.df = pd.concat(
             [self.optimization_result.df, pd.DataFrame([data])], ignore_index=True
         )
+        # self.optimization_result.df.loc[len(self.optimization_result.df)] = data
 
-    def close(self):
-        if self.pbar is not None:
+        if not algorithm.has_next():
             self.pbar.close()

@@ -26,11 +26,6 @@ class ContainerProblem(Problem):
             # Eval objective functions
             scores = [scorer.score(container) for scorer in self.scorers]
             objectives.append(scores)
-            for score in scores:
-                if score > 1:
-                    print(
-                        f"Warning: Objective function score {score} is greater than 1. This may indicate a problem with the scoring function."
-                    )
 
             # Eval ieq constraint functions
             container_constraint_violations = [

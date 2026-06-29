@@ -195,8 +195,6 @@ def run_nsga3_optimization(
             eliminate_duplicates=False,
         )
 
-        callback.close()
-
         results = minimize(
             problem=problem,
             algorithm=algorithm,
@@ -204,6 +202,12 @@ def run_nsga3_optimization(
             seed=seed,
             verbose=False,
         )
+
+        # Extract results from algorithm because pymoo deepcopies callback + algorithm meaning our original
+        # reference to the optimization result is not updated
+        algorithm = cast(UNSGA3, results.algorithm)
+        callback = cast(ContainerCallback, algorithm.callback)
+        container_optimization_result = callback.optimization_result
 
         # Type validation for results
         if not (
