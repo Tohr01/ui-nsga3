@@ -1,14 +1,15 @@
 #!/bin/bash
 
-if [ ! -d ".venv" ]; then
-  echo "Creating virtual environment..."
-  python3 -m venv .venv
-  source .venv/bin/activate
-  pip install --upgrade pip
-  pip install -r requirements.txt
+set -e 
 
-  # Post install playwright
-  python -m playwright install --with-deps chromium
+# Check if user has uv in their PATH
+if ! command -v uv &> /dev/null
+then
+    echo "uv could not be found. Please install uv and add it to your PATH."
+    exit 2
 fi
 
-echo "Virtual environment set up."
+uv sync
+uv run playwright install
+
+echo "Setup complete."
