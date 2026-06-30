@@ -128,10 +128,6 @@ class Text(TextlikeElement):
                 self.text, self.font_family, self.font_size
             )
 
-        assert self.font_size >= MIN_FONT_SIZE_PX, (
-            "Font size shrunk below minimum; This should not happen"
-        )
-
         # Now the text fits within the canvas bounds, we just need to clamp the position
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)

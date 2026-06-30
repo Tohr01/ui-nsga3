@@ -98,8 +98,11 @@ class TextMeasure:
             {text}</p>"""
         )
         bbox = self._page.locator("#text").bounding_box()
+        if bbox is None:
+            raise ValueError(
+                f"Bounding box is None for {text = }, {font_family = }, {font_size = }."
+            )
 
-        assert bbox is not None, "Bounding box should not be None"
         width_px = bbox["width"]
         height_px = bbox["height"]
 
@@ -141,9 +144,10 @@ class TextMeasure:
         :return: The maximum fitting font size in pixels
         """
         key = (text, font_family)
-        assert key in self._max_fitting_cache, (
-            "Call precache_font_sizes first to populate the max fitting font size cache before calling this method."
-        )
+        if key not in self._max_fitting_cache:
+            raise ValueError(
+                f"Max fitting font size for {key = } not precached. Call precache_font_sizes first."
+            )
         return self._max_fitting_cache[key]
 
     def close(self):

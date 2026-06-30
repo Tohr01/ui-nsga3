@@ -38,9 +38,11 @@ class Reproducible(ABC, Generic[T]):
         :param mutation_rate: The mutation rate to be used during mutation
         :return: New individual after crossover and mutation
         """
-        assert type(i1) is type(i2), (
-            "Individuals must be of the same type for crossover."
-        )
+        if type(i1) is not type(i2):
+            raise TypeError(
+                f"Individuals must be of the same type for crossover. Got {type(i1)} and {type(i2)}."
+            )
+
         offspring = type(i1).crossover(i1, i2)
         offspring.mutate(mutation_rate)
         return offspring

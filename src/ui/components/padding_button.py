@@ -194,10 +194,6 @@ class PaddingButton(TextlikeElement):
             self.size.width = text_width + 2 * self.padding_width
             self.size.height = text_height + 2 * self.padding_height
 
-        assert self.font_size >= MIN_FONT_SIZE_PX, (
-            "Font size shrunk below minimum; This should not happen"
-        )
-
         # If text shrinking did not ran
         self.size.width = text_width + 2 * self.padding_width
         self.size.height = text_height + 2 * self.padding_height

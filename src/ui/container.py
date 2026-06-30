@@ -43,9 +43,11 @@ class Container(Reproducible):
             "Crossover can only be performed on Containers with the same blueprint_id"
         )
         for element1, element2 in zip(i1.elements, i2.elements):
-            assert type(element1) is type(element2), (
-                "Crossover can only be performed on Containers with the same elements."
-            )
+            if type(element1) is not type(element2):
+                raise TypeError(
+                    f"Can only crossover elements of same type. Got {type(element1)} and {type(element2)}."
+                )
+
             new_elements.append(type(element1).crossover(element1, element2))
         return Container(
             i1.blueprint_id, i1.width_px, i1.height_px, i1.label, new_elements
