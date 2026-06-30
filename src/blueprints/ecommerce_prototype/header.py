@@ -1,5 +1,3 @@
-import PIL.Image as Image
-
 from scoring.aesthetic.symmetry import SymmetryMode, SymmetryScorer
 from scoring.axis_align import AxisAlignScorer
 from scoring.element_order import ElementOrderScorer
@@ -11,27 +9,23 @@ from scoring.text.min_font_size import MinFontSizeScorer
 from ui.blueprint import BlueprintContainer
 from ui.components.aspect_image import AspectImage, AspectImageConfig, ImageType
 from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
+from ui.util import img_path_to_aspect_ratio
 
 #
 # Header
 #
-logo_img = Image.open("assets/logo.png")
-logo_img_aspect_ratio = logo_img.width / logo_img.height
-shopping_cart_img = Image.open("assets/shopping-cart.png")
-shopping_cart_img_aspect_ratio = shopping_cart_img.width / shopping_cart_img.height
-search_img = Image.open("assets/search.png")
-search_img_aspect_ratio = search_img.width / search_img.height
-user_img = Image.open("assets/user.png")
-user_img_aspect_ratio = user_img.width / user_img.height
+logo_img_path = "assets/logo.png"
+shopping_cart_img_path = "assets/shopping-cart.png"
+search_img_path = "assets/search.png"
 header = BlueprintContainer(
     label="Header",
     elements=[
         (
             AspectImage,
             {
-                "img_path": "assets/logo.png",
+                "img_path": logo_img_path,
                 "label": "Logo",
-                "aspect_ratio": logo_img_aspect_ratio,
+                "aspect_ratio": img_path_to_aspect_ratio(logo_img_path),
                 "config": AspectImageConfig(is_touch_target=True),
             },
         ),
@@ -54,9 +48,9 @@ header = BlueprintContainer(
         (
             AspectImage,
             {
-                "img_path": "assets/search.png",
+                "img_path": search_img_path,
                 "label": "Search Icon",
-                "aspect_ratio": search_img_aspect_ratio,
+                "aspect_ratio": img_path_to_aspect_ratio(search_img_path),
                 "config": AspectImageConfig(
                     is_touch_target=True, image_type=ImageType.ICON
                 ),
@@ -65,9 +59,9 @@ header = BlueprintContainer(
         (
             AspectImage,
             {
-                "img_path": "assets/shopping-cart.png",
+                "img_path": shopping_cart_img_path,
                 "label": "Shopping Cart Icon",
-                "aspect_ratio": shopping_cart_img_aspect_ratio,
+                "aspect_ratio": img_path_to_aspect_ratio(shopping_cart_img_path),
                 "config": AspectImageConfig(
                     is_touch_target=True, image_type=ImageType.ICON
                 ),
