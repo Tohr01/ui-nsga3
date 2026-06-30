@@ -21,7 +21,7 @@ from ui.util import img_path_to_aspect_ratio, multiline_text_to_html
 # Product details
 #
 
-start_img_path = "assets/stars.png"
+stars_img_path = "assets/stars.png"
 
 product_description_text = multiline_text_to_html("""Über die Schuhe:
 • Gefederte Sohle für optimalen Komfort und Dämpfung bei jedem Schritt
@@ -45,8 +45,8 @@ product_details = BlueprintContainer(
             AspectImage,
             {
                 "label": "Stars",
-                "img_path": start_img_path,
-                "aspect_ratio": img_path_to_aspect_ratio(start_img_path),
+                "img_path": stars_img_path,
+                "aspect_ratio": img_path_to_aspect_ratio(stars_img_path),
             },
         ),
         (
