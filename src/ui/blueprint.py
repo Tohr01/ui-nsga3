@@ -26,12 +26,16 @@ class BlueprintContainer:
 
     def __post_init__(self):
         """
-        Will flatten the elements list by replacing any BlueprintContainer with a PlaceholderContainer and keeping the other elements as they are.
-        The flatted_elements array will have the the following format:
-        If the element is a BlueprintContainer:
-        (PlaceholderContainer, {"label": element.label, "blueprint_id": BlueprintContainer.blueprint_id})
-        If the element is a tuple of (UIElement type, args):
-        (UIElement type, init args)
+        After initialization will two things:
+        1.  Will flatten the elements list by replacing any BlueprintContainer with a PlaceholderContainer and
+            keeping the other elements as they are.
+            The flatted_elements array will have the the following format:
+            - If the element is a BlueprintContainer:
+              (PlaceholderContainer, {"label": element.label, "blueprint_id": BlueprintContainer.blueprint_id})
+            - If the element is a tuple of (UIElement type, args):
+              (UIElement type, init args)
+        2. Will count the number of subelements in each BlueprintContainer and store it in a dictionary with the blueprint_id as the key
+           and the count as the value.
         """
         flattend_elements = []
         for element in self.elements:
@@ -47,7 +51,6 @@ class BlueprintContainer:
         # Bypass frozen
         object.__setattr__(self, "flattend_elements", flattend_elements)
 
-        # TODO: Put in docstring
         container_subelement_count = {}
         for element in self.elements:
             if isinstance(element, BlueprintContainer):
