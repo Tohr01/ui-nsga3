@@ -116,8 +116,6 @@ def run_nsga3_optimization(
     :return: A dictionary of blueprint_id to optimized Container
     """
 
-    # TODO: Launch multiple NSGA-III optimizations in parallel for different sub-blueprints of the root blueprint
-
     # Queue of triples of (container_width_px, container_height_px, blueprint)
     queue: list[tuple[float, float, BlueprintContainer]] = [
         (root_blueprint.width_px, root_blueprint.height_px, root_blueprint)
@@ -229,11 +227,30 @@ def run_nsga3_optimization(
             open(f"results_{current_blueprint.label}.pkl", "wb"),
         )
 
-        # TODO: Dont allow to pick a container with constraint violation > 0
-        weights = current_blueprint.get_normalized_scorer_weight_arr()
-        decomb = WeightedSum()
-        best_container_idx = decomb.do(F=results.F, weights=weights).argmin()
-        best_container = cast(Container, results.X[best_container_idx, 0])
+        # Pick a solution
+        # 1. Find feasible solutions (CV <= 0)
+        # 2. If feasible solutions exist, choose the one with min weighted sum of objectives
+        # 3. If no feasible solutions exist, choose the one with min constraint violation
+        feasible_mask = results.CV[:, 0] <= 0
+
+        if feasible_mask.any():
+            decomb = WeightedSum()
+
+            F_feasible = results.F[feasible_mask]
+            X_feasible = results.X[feasible_mask]
+            weights = current_blueprint.get_normalized_scorer_weight_arr()
+            best_feasible_container_idx = decomb.do(
+                F=F_feasible, weights=weights
+            ).argmin()
+            best_F = F_feasible[best_feasible_container_idx]
+            best_container = cast(Container, X_feasible[best_feasible_container_idx, 0])
+        else:
+            logger.warning(
+                "No feasible solutions found, picking best among all solutions with lowest constraint violation"
+            )
+            best_container_idx = results.CV[:, 0].argmin()
+            best_F = results.F[best_container_idx]
+            best_container = cast(Container, results.X[best_container_idx, 0])
 
         # Map the container id to the size of the child container
         container_sizes = {}
@@ -259,7 +276,7 @@ def run_nsga3_optimization(
 
         # Store best container and optimization result for the current blueprint
         best_optimized_container = OptimizedContainer(
-            container=best_container, summed_score=results.F[best_container_idx].sum()
+            container=best_container, summed_score=best_F.sum()
         )
         container_optimization_result.best_container = best_optimized_container
         container_optimization_result.execution_time_sec = cast(
