@@ -1,7 +1,7 @@
 from warnings import deprecated
 
 from scoring.scorer import Scorer
-from ui.components.singleline_text import SingleLineText
+from ui.components.text import Text
 from ui.container import Container
 
 
@@ -17,7 +17,7 @@ class SameTextSizeScorer(Scorer):
     """
 
     def score(self, container: Container) -> float:
-        text_elements = [e for e in container.elements if isinstance(e, SingleLineText)]
+        text_elements = [e for e in container.elements if isinstance(e, Text)]
         text_type_to_font_sizes = {}
         for element in text_elements:
             text_type = element.config.text_type

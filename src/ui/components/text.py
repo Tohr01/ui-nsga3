@@ -15,15 +15,15 @@ from ui.text_measure import TextMeasure
 
 
 @dataclass
-class SingleLineTextConfig(TextlikeElementConfig):
+class TextConfig(TextlikeElementConfig):
     enable_font_size_crossover: bool = True
     enable_font_size_mutation: bool = True
 
 
 # NOTE: Should support multiple lines currently by using <br> as line break
-class SingleLineText(TextlikeElement):
+class Text(TextlikeElement):
     _max_font_size: int
-    config: SingleLineTextConfig  # type: ignore[override]
+    config: TextConfig  # type: ignore[override]
 
     def __init__(
         self,
@@ -32,7 +32,7 @@ class SingleLineText(TextlikeElement):
         font_family: str = DEFAULT_FONT_FAMILY,
         label: Optional[str] = None,
         position: Optional[Position] = None,
-        config: SingleLineTextConfig = SingleLineTextConfig(),
+        config: TextConfig = TextConfig(),
     ):
         self.text = text
         self.font_family = font_family
@@ -55,7 +55,7 @@ class SingleLineText(TextlikeElement):
         super().__init__(label=label, position=position, size=size, config=config)
 
     @staticmethod
-    def crossover(i1: "SingleLineText", i2: "SingleLineText") -> "SingleLineText":
+    def crossover(i1: "Text", i2: "Text") -> "Text":
         # Crossover position
         new_position = (
             Position.crossover(i1.position, i2.position)
@@ -73,7 +73,7 @@ class SingleLineText(TextlikeElement):
             MIN_FONT_SIZE_PX,
             i1._max_font_size,
         )
-        return SingleLineText(
+        return Text(
             text=i1.text,
             font_size=new_font_size,
             font_family=i1.font_family,

@@ -8,7 +8,7 @@ from scoring.text.golden_ratio_text_size import GoldenRatioTextSizeScorer
 from scoring.text.min_font_size import MinFontSizeScorer
 from ui.blueprint import BlueprintContainer
 from ui.components.aspect_image import AspectImage, AspectImageConfig, ImageType
-from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
+from ui.components.text import Text, TextConfig
 from ui.util import img_path_to_aspect_ratio
 
 #
@@ -30,19 +30,19 @@ header = BlueprintContainer(
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "text": "Kategorien",
                 "label": "Categories Text",
-                "config": SingleLineTextConfig(is_touch_target=True),
+                "config": TextConfig(is_touch_target=True),
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "text": "Angebote",
                 "label": "Offers Text",
-                "config": SingleLineTextConfig(is_touch_target=True),
+                "config": TextConfig(is_touch_target=True),
             },
         ),
         (

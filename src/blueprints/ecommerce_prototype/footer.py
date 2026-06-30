@@ -7,40 +7,34 @@ from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.text.golden_ratio_text_size import GoldenRatioTextSizeScorer
 from scoring.text.min_font_size import MinFontSizeScorer
 from ui.blueprint import BlueprintContainer
-from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
+from ui.components.text import Text, TextConfig
 from ui.enums import TextType
 
 footer = BlueprintContainer(
     label="Footer",
     elements=[
         (
-            SingleLineText,
+            Text,
             {
                 "text": "Impressum",
                 "label": "Imprint Text",
-                "config": SingleLineTextConfig(
-                    is_touch_target=True, text_type=TextType.FOOTNOTE
-                ),
+                "config": TextConfig(is_touch_target=True, text_type=TextType.FOOTNOTE),
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "text": "Datenschutz",
                 "label": "Dataprivacy Text",
-                "config": SingleLineTextConfig(
-                    is_touch_target=True, text_type=TextType.FOOTNOTE
-                ),
+                "config": TextConfig(is_touch_target=True, text_type=TextType.FOOTNOTE),
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "text": "AGB",
                 "label": "TaC Text",
-                "config": SingleLineTextConfig(
-                    is_touch_target=True, text_type=TextType.FOOTNOTE
-                ),
+                "config": TextConfig(is_touch_target=True, text_type=TextType.FOOTNOTE),
             },
         ),
     ],

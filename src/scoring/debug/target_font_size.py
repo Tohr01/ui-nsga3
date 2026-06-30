@@ -1,5 +1,5 @@
 from scoring.scorer import Scorer
-from ui.components.singleline_text import SingleLineText
+from ui.components.text import Text
 from ui.container import Container
 
 
@@ -20,7 +20,7 @@ class TargetFontSizeScorer(Scorer):
     def score(self, container: Container) -> float:
         penalty = 0
         for element in container.elements:
-            if isinstance(element, SingleLineText):
+            if isinstance(element, Text):
                 penalty += abs(element.font_size - self.target_font_size_px)
 
         return penalty

@@ -13,7 +13,7 @@ from ui.blueprint import BlueprintContainer
 from ui.components.aspect_image import AspectImage
 from ui.components.cover_image import CoverImage
 from ui.components.padding_button import PaddingButton, PaddingButtonConfig
-from ui.components.singleline_text import SingleLineText, SingleLineTextConfig
+from ui.components.text import Text, TextConfig
 from ui.enums import TextType
 from ui.util import img_path_to_aspect_ratio, multiline_text_to_html
 
@@ -34,11 +34,11 @@ product_details = BlueprintContainer(
     label="Product_Details",
     elements=[
         (
-            SingleLineText,
+            Text,
             {
                 "label": "Headline",
                 "text": "AirSportX - Limited Edition",
-                "config": SingleLineTextConfig(text_type=TextType.HEADER),
+                "config": TextConfig(text_type=TextType.HEADER),
             },
         ),
         (
@@ -50,19 +50,19 @@ product_details = BlueprintContainer(
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "label": "Product Description",
                 "text": product_description_text,
-                "config": SingleLineTextConfig(text_type=TextType.PARAGRAPH),
+                "config": TextConfig(text_type=TextType.PARAGRAPH),
             },
         ),
         (
-            SingleLineText,
+            Text,
             {
                 "label": "Price",
                 "text": "129,99€",
-                "config": SingleLineTextConfig(text_type=TextType.SUBHEADER),
+                "config": TextConfig(text_type=TextType.SUBHEADER),
             },
         ),
         (
