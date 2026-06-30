@@ -8,3 +8,9 @@ class TextType(StrEnum):
     PARAGRAPH = "paragraph"
     FOOTNOTE = "footnote"
     OTHER = "other"
+
+
+class ImageType(StrEnum):
+    LOGO = "logo"
+    ICON = "icon"
+    OTHER = "other"

@@ -22,6 +22,9 @@ class ElementOrderScorer(Scorer):
         element_order_labels: list[str],
         order_direction: Axis = Axis.X,
     ) -> None:
+        if len(set(element_order_labels)) != len(element_order_labels):
+            raise ValueError("Duplicate label found in element_order_labels")
+
         self.element_order_labels = element_order_labels
         self.expected_ranks = {
             label: i for i, label in enumerate(self.element_order_labels)

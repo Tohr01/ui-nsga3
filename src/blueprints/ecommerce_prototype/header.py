@@ -7,8 +7,9 @@ from scoring.min_touch_target_size import MinTouchTargetSizeScorer
 from scoring.text.golden_ratio_text_size import GoldenRatioTextSizeScorer
 from scoring.text.min_font_size import MinFontSizeScorer
 from ui.blueprint import BlueprintContainer
-from ui.components.aspect_image import AspectImage, AspectImageConfig, ImageType
+from ui.components.aspect_image import AspectImage, AspectImageConfig
 from ui.components.text import Text, TextConfig
+from ui.enums import ImageType
 from ui.util import img_path_to_aspect_ratio
 
 #

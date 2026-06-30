@@ -8,6 +8,10 @@ from genetic.reproducible import Reproducible
 
 
 class RGBColor(Reproducible):
+    """
+    RGBColor class gene representing a color in RGB space with channels r, g, b ∈ [0; 255]
+    """
+
     r: int
     g: int
     b: int
@@ -15,17 +19,31 @@ class RGBColor(Reproducible):
     def __init__(
         self, r: Optional[int] = None, g: Optional[int] = None, b: Optional[int] = None
     ):
+        """
+        Initialize a new RGBColor object with optional r, g, b channels.
+        :param r: Optional red channel (if not set pick from randint(0, 256))
+        :param g: Optional green channel (if not set pick from randint(0, 256))
+        :param b: Optional blue channel (if not set pick from randint(0, 256))
+        """
         self.r, self.g, self.b = (self._init_channel(c) for c in (r, g, b))
 
     def _init_channel(self, channel: Optional[int]) -> int:
-        assert channel is None or (0 <= channel <= 255), (
-            "Color channel must be between 0 and 255"
-        )
+        if channel is not None and not (0 <= channel <= 255):
+            raise ValueError("Color channel must be between 0 and 255")
 
         return channel if channel is not None else random.randint(0, 256)
 
     @staticmethod
     def crossover(i1: "RGBColor", i2: "RGBColor") -> "RGBColor":
+        """
+        Crossover two RGBColors to produce a new RGBColor.
+        We perform an intermediate recombination of r, g, b channels.
+        Result will be clamped to [0, 255] to ensure valid channels and cast to int.
+
+        :param i1: First RGBColor
+        :param i2: Second RGBColor
+        :return: New RGBColor
+        """
         new_r, new_g, new_b = (
             clip(intermediate_recombination(getattr(i1, c), getattr(i2, c)), 0, 255)
             for c in ("r", "g", "b")
@@ -33,6 +51,10 @@ class RGBColor(Reproducible):
         return RGBColor(int(new_r), int(new_g), int(new_b))
 
     def mutate(self, mutation_rate: float):
+        """
+        Mutate the RGBColor by applying a normal distribution mutation to r, g, b channels.
+        Result will be clamped to [0, 255] to ensure valid channels and cast to int.
+        """
         for channel in ("r", "g", "b"):
             mutated_channel = clip(
                 normal_distribution_mutate(
@@ -46,6 +68,9 @@ class RGBColor(Reproducible):
             )
             setattr(self, channel, int(mutated_channel))
 
-    # NOTE: This is not in a overridden method of reproducible
     def to_html_str(self) -> str:
+        """
+        Returns the RGBColor as a string in the format "rgb(r, g, b)" for HTML/CSS.
+        :return: String representation of RGBColor
+        """
         return f"rgb({self.r}, {self.g}, {self.b})"

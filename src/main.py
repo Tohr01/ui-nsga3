@@ -68,6 +68,9 @@ def setup_logger(level: str = "INFO"):
 if __name__ == "__main__":
     setup_logger("DEBUG")
 
+    # Init output dir
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
     args = parser.parse_args()
     SEED = args.seed
     if SEED is not None:

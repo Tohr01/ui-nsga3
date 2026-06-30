@@ -7,6 +7,11 @@ from ui.element import UIElement
 
 
 class Container(Reproducible):
+    """
+    The Container holds a list of UIElements and is the main individual in the genetic algorithm.
+    A Container is usually synthesized from a BlueprintContainer.
+    """
+
     blueprint_id: str
 
     # Absolute dimensions of container canvas in pixels
@@ -65,6 +70,14 @@ class Container(Reproducible):
         height: Optional[float] = None,
     ) -> str:
         """
+        Renders the container and its elements a HTML string. If the container contains PlaceholderContainers,
+        they will be replaced with the optimized containers from the containers dictionary if they exist.
+
+        :param containers: A dictionary of blueprint_id to Container instances. Used to replace PlaceholderContainers
+        :param x: The x position of the container in percentage (0-1).
+        :param y: The y position of the container in percentage (0-1). If None, the container will be positioned at 0.
+        :param width: The width of the container in percentage (0-1). If None, the container will be sized to 100%.
+        :param height: The height of the container in percentage (0-1). If None, the container will be sized to 100%.
         :return: HTML string of the rendered container and its elements.
         """
         styles = {

@@ -5,6 +5,11 @@ T = TypeVar("T", bound="Reproducible")
 
 
 class Reproducible(ABC, Generic[T]):
+    """
+    Abstract base class for reproducible individuals in a genetic algorithm.
+    Each class inheriting from Reproducible must implement the crossover and mutate methods.
+    """
+
     @staticmethod
     @abstractmethod
     def crossover(i1: T, i2: T) -> T:
@@ -14,7 +19,7 @@ class Reproducible(ABC, Generic[T]):
         :param i2: Second individual
         :return: New individual
         """
-        raise NotImplementedError("crossover method must be implemented by subclass.")
+        pass
 
     @abstractmethod
     def mutate(self, mutation_rate: float):
@@ -22,7 +27,7 @@ class Reproducible(ABC, Generic[T]):
         Mutate the individual. (Normally by changing its attributes)
         :param mutation_rate: The mutation rate to be used during mutation
         """
-        raise NotImplementedError("mutate method must be implemented by subclass.")
+        pass
 
     @staticmethod
     def crossover_and_mutate(i1: T, i2: T, mutation_rate: float) -> T:

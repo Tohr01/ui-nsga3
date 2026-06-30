@@ -1,6 +1,5 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from enum import StrEnum
 from typing import Optional
 
 import numpy.random as random
@@ -13,13 +12,8 @@ from genetic.recombination import intermediate_recombination
 from rendering.util import styles_dict_to_str
 from ui.canvas_context import CanvasContext
 from ui.element import ElementConfig, UIElement
+from ui.enums import ImageType
 from ui.util import img_path_to_base64_str
-
-
-class ImageType(StrEnum):
-    LOGO = "logo"
-    ICON = "icon"
-    OTHER = "other"
 
 
 @dataclass
@@ -28,6 +22,13 @@ class AspectImageConfig(ElementConfig):
 
 
 class AspectImage(UIElement):
+    """
+    An UIElement representing an image with a fixed aspect ratio.
+    While mutating, crossover or initialization the object will ensure
+    that the aspect ratio is preserved by only mutating the width and calculating the
+    height based on the aspect ratio.
+    """
+
     img_path: str
     aspect_ratio: float  # width / height
     config: AspectImageConfig  # type: ignore[override]
@@ -98,6 +99,12 @@ class AspectImage(UIElement):
             self.size = self._size_from(new_width)
 
     def clamp_to_canvas(self):
+        """
+        Clamp the position and size of the image to fit within the canvas while retaining the aspect ratio.
+        1. If the size exceeds the canvas dimensions, scale it down to fit within the canvas
+        while retaining the aspect ratio.
+        2. Clamp the position
+        """
         # Clamp size to fit within canvas; retaining aspect ratio
         if self.size.width > 1 or self.size.height > 1:
             scale = 1 / max(self.size.width, self.size.height)

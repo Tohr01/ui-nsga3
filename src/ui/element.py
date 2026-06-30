@@ -31,6 +31,11 @@ class ElementConfig:
 
 
 class UIElement(Reproducible, ABC):
+    """
+    Base class for all UIElements.
+    Each UIElement has to have a bounding box (position and size) and config.
+    """
+
     label: Optional[str]
     position: Position
     size: Size
@@ -50,9 +55,7 @@ class UIElement(Reproducible, ABC):
 
     @abstractmethod
     def to_html_element(self) -> str:
-        raise NotImplementedError(
-            "to_html_element method must be implemented by subclass."
-        )
+        pass
 
     def clamp_to_canvas(self):
         """
@@ -73,9 +76,13 @@ class TextlikeElementConfig(ElementConfig):
     text_type: TextType = TextType.OTHER
 
 
-# TODO: Maybe insert _max_font_size and related vars
 class TextlikeElement(UIElement):
+    """
+    Base class for text like UIElements such as Text and Buttons
+    """
+
     text: str
     font_size: int
     font_family: str
     config: TextlikeElementConfig  # type: ignore[override]
+    _max_font_size: int

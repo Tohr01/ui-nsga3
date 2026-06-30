@@ -4,8 +4,8 @@ from typing import Optional
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from rendering.util import styles_dict_to_str
-from ui.components.aspect_image import ImageType
 from ui.element import ElementConfig, UIElement
+from ui.enums import ImageType
 from ui.util import img_path_to_base64_str
 
 
@@ -15,6 +15,11 @@ class ConverImageConfig(ElementConfig):
 
 
 class CoverImage(UIElement):
+    """
+    An UIElement representing an image with a variable aspect ratio.
+    Similar to the Box UIElement. Behaves like the cover property in CSS.
+    """
+
     img_path: str
     config: ConverImageConfig  # type: ignore[override]
 

@@ -22,12 +22,17 @@ class PaddingButtonConfig(TextlikeElementConfig):
 
 
 class PaddingButton(TextlikeElement):
+    """
+    An UIElement representing a button with text and padding around it.
+    The padding and font size can be mutated and crossed over.
+    NOTE: Currently the button background and text color are fixed.
+    """
+
     background_color_hex: str
     text_color_hex: str
 
     padding_width: float
     padding_height: float
-    _max_font_size: int
     config: PaddingButtonConfig  # type: ignore[override]
 
     def __init__(
@@ -164,6 +169,13 @@ class PaddingButton(TextlikeElement):
         )
 
     def clamp_to_canvas(self):
+        """
+        Makes sure that the button fits within the canvas.
+        Will do the following things in order:
+        1. Shrink padding if necessary
+        2. Shrink font size if necessary
+        3. Clamp position to fit within canvas
+        """
         # Make sure the size is not larger than the canvas
         # First shrink padding if necessary
         # Second shrink font size if necessary

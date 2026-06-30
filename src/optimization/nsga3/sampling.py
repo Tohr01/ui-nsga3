@@ -7,6 +7,13 @@ from ui.container import Container
 
 
 class ContainerSampling(Sampling):
+    """
+    Sampling operator for Container objects.
+    Responsible for instantiating new Container objects based on a given Blueprint and
+    given canvas dimensions. Will generate a container with randomly initalized subelements.
+    Every container is then repaired to ensure all elements are within the canvas bounds.
+    """
+
     container_width_px: float
     container_height_px: float
     blueprint: BlueprintContainer

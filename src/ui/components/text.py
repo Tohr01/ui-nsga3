@@ -20,9 +20,16 @@ class TextConfig(TextlikeElementConfig):
     enable_font_size_mutation: bool = True
 
 
-# NOTE: Should support multiple lines currently by using <br> as line break
 class Text(TextlikeElement):
-    _max_font_size: int
+    """
+    The Text UIElement represents a text element with a specific font size and family.
+    Position and font size can be mutated and crossed over. The size will be inferred
+    from the text content, font size and family.
+
+    NOTE: Requires preprocessing by the TextMeasure class
+    NOTE: When inputting a multiline text make sure to use <br> for line breaks
+    """
+
     config: TextConfig  # type: ignore[override]
 
     def __init__(

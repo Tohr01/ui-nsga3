@@ -7,6 +7,11 @@ from ui.element import UIElement
 
 
 class PlaceholderContainer(UIElement):
+    """
+    The placeholder container is a special UIElement that is used to represent another container
+    for optimization. After optimization is done the placeholder may be replaced with the actual container.
+    """
+
     blueprint_id: str
 
     # NOTE: We do not supply an element config for placeholder as it is not directly

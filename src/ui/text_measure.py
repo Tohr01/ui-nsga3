@@ -10,6 +10,12 @@ logger = get_new_logger("ui.text_measure")
 
 
 class TextMeasure:
+    """
+    Singleton class that uses Playwright to measure the dimensions of text with a given font family and size.
+    Caches sizes (relative to canvas dimensions) for font family, font size and content in order to avoid
+    redundant measurements and max fitting font size for each of them.
+    """
+
     _instance: Optional["TextMeasure"] = None  # Singleton instance
     _pw: Playwright
     _browser: Browser

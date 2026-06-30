@@ -8,7 +8,7 @@ from ui.container import Container
 @deprecated("Currently unused")
 class ContentScorer(Scorer):
     def score(self, container: Container) -> float:
-        penalty = 0
+        penalty = 0.0
 
         header = next((e for e in container.elements if e.label == "Header"), None)
         footer = next((e for e in container.elements if e.label == "Footer"), None)

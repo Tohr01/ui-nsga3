@@ -30,7 +30,13 @@ class ProximityScorer(Scorer):
     clusters: list[list[str]]
 
     def __init__(self, clusters: list[list[str]]) -> None:
-        # TODO: Validate clusters. No duplicate label, no single elem clusters
+        # Validate clusters. No duplicate label, no single elem clusters
+        for cluster in clusters:
+            if len(cluster) <= 1:
+                raise ValueError(f"Cluster {cluster} must contain at least 2 elements.")
+            elif len(set(cluster)) != len(cluster):
+                raise ValueError(f"Cluster {cluster} contains duplicate labels.")
+
         self.clusters = clusters
 
     def score(self, container: Container) -> float:

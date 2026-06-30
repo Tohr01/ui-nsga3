@@ -5,7 +5,14 @@ from ui.container import Container
 
 
 class PaddingScorer(Scorer):
+    """
+    Penalizes containers that have elements overlapping or too close to each other.
+    """
+
     def __init__(self, padding: float = 0.01):
+        """
+        Initializes the PaddingScorer with a specified padding threshold.
+        """
         self.padding = padding
 
     def score(self, container: Container) -> float:
@@ -31,4 +38,4 @@ class PaddingScorer(Scorer):
             # total overlap += area of the overlap
             total_overlap += x_overlap * y_overlap
 
-        return total_overlap  # 0.0 = feasible, > 0.0 = infeasible
+        return total_overlap

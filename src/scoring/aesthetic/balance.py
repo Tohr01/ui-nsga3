@@ -27,7 +27,6 @@ class BalanceScorer(Scorer):
         if num_elements == 0:
             return 0.0
 
-        # NOTE: WHEN CHANGING THIS CHANGE NORMALIZATION
         x_center = 0.5
         y_center = 0.5
         wl, wr, wt, wb = 0, 0, 0, 0
@@ -35,7 +34,7 @@ class BalanceScorer(Scorer):
             pos = element.position
             size = element.size
 
-            area = size.area()
+            area = size.area
             cx = pos.x + size.width / 2
             cy = pos.y + size.height / 2
 

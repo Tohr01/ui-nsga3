@@ -15,6 +15,11 @@ class BoxConfig(ElementConfig):
 
 
 class Box(UIElement):
+    """
+    A simple UIElement representing a box with a background color, position and size.
+    Every one of those genes/attributes can be mutated or/and crossed over.
+    """
+
     bg_color: RGBColor
     config: BoxConfig  # type: ignore[override]
 

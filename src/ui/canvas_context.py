@@ -2,6 +2,10 @@ from typing import Optional
 
 
 class CanvasContext:
+    """
+    Singleton class holding current context about the canvas dimensions and aspect ratio.
+    """
+
     _instance: Optional["CanvasContext"] = None  # Singleton instance
 
     width_px: float

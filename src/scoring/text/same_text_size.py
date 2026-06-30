@@ -25,7 +25,7 @@ class SameTextSizeScorer(Scorer):
                 text_type_to_font_sizes[text_type] = []
             text_type_to_font_sizes[text_type].append(element.font_size)
 
-        penalty = 0
+        penalty = 0.0
         for font_sizes in text_type_to_font_sizes.values():
             if len(font_sizes) > 1:
                 max_size = max(font_sizes)

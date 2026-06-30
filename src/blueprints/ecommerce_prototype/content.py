@@ -23,12 +23,12 @@ from ui.util import img_path_to_aspect_ratio, multiline_text_to_html
 
 stars_img_path = "assets/stars.png"
 
-product_description_text = multiline_text_to_html("""Über die Schuhe:
-• Gefederte Sohle für optimalen Komfort und Dämpfung bei jedem Schritt
-• Atmungsaktives Obermaterial aus hochwertigem Mesh für maximale Belüftung
-• Robuste Laufsohne aus rutschfestem Gummiverbundsstoff
-• Sportliches Blabla bla
-• Lorem ipsum dolor sit amet, consectetur adipiscing elit.""")
+product_description_text = multiline_text_to_html("""Produktdetails:
+• Optimaler Komfort durch die verbesserte AirSportPLUS Dämpfung
+• Atmungsaktives Obermaterial aus hochwertigem Mesh
+• Hoher Grip der Laufsohle auf verschiedenen Terrains
+• Dynamisches Abrollen dank Xtrack Außensohle, ideal auf langen Distanzen
+• Farben: Cloud White Green / Carbon Orange""")
 
 product_details = BlueprintContainer(
     label="Product_Details",

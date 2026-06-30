@@ -25,7 +25,6 @@ class FooterScorer(Scorer):
     MAX_FOOTER_HEIGHT_PX = max(FOOTER_HEIGHTS_PX)
 
     def score(self, container: Container) -> float:
-        # TODO: Look into normalization again
         penalty = 0.0
         count_footer_elements = 0
         # PERF: Caching

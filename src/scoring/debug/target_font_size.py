@@ -18,7 +18,7 @@ class TargetFontSizeScorer(Scorer):
         self.target_font_size_px = target_font_size_px
 
     def score(self, container: Container) -> float:
-        penalty = 0
+        penalty = 0.0
         for element in container.elements:
             if isinstance(element, Text):
                 penalty += abs(element.font_size - self.target_font_size_px)

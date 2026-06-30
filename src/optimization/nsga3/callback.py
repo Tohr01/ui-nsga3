@@ -9,13 +9,22 @@ from optimization.nsga3.result import ContainerOptimizationResult
 
 
 class ContainerCallback(Callback):
+    """
+    Custom callback class for NSGA3 optimization algorithm to track the optimization
+    progress and store the results in a ContainerOptimizationResult object.
+    Also displays a progress bar indicating the number of generations completed out of n_gen.
+    """
+
     optimization_result: ContainerOptimizationResult
     n_gen: int
     pbar: Optional[tqdm]
 
-    def __init__(
-        self, n_gen: int, optimization_result: ContainerOptimizationResult
-    ) -> None:
+    def __init__(self, n_gen: int, optimization_result: ContainerOptimizationResult):
+        """
+        Initialize the ContainerCallback with the total number of generations and the optimization result object.
+        :param n_gen: Total number of generations for the optimization algorithm.
+        :param optimization_result: ContainerOptimizationResult object to store the optimization results.
+        """
         self.optimization_result = optimization_result
         self.n_gen = n_gen
         self.pbar = None
@@ -36,14 +45,6 @@ class ContainerCallback(Callback):
             "G": algorithm.pop.get("G"),  # Constraint violation
             "CV": algorithm.pop.get("CV"),  # Aggregated constraint violation
         }
-        # Hypervolume indicator
-        # H. Ishibuchi, R. Imada, Y. Setoguchi, and Y. Nojima,
-        # “How to specify a reference point in hypervolume calculation for fair performance comparison,”
-        # Evolutionary Computation, vol. 26, no. 3, pp. 411–440, May 2018, doi: 10.1162/evco_a_00226.
-        # -> We select a ref point that is 10% bigger then the nadir point; Comparability between different containers
-        # hv_ref_vector = np.ones(F.shape[1]) * 1.1
-        # hv = Hypervolume(ref_point=hv_ref_vector)
-        # data["HV"] = hv.do(F)
 
         # Append to the optimization result df
         self.optimization_result.df = pd.concat(

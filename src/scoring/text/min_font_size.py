@@ -23,6 +23,7 @@ class MinFontSizeScorer(Scorer):
         https://handreichungen.bfit-bund.de/accessible-uie/schrift.html (accessed Jun. 16, 2026).
     """
 
+    # NOTE: Change when changing the text type in enums.py
     _min_font_size_px_by_type = {
         TextType.HEADER: 22,
         TextType.SUBHEADER: 22,

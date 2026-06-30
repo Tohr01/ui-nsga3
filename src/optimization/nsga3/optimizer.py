@@ -137,7 +137,7 @@ def run_nsga3_optimization(
             width_px, height_px, current_blueprint, bounds_repair
         )
         crossover = ContainerCrossover()
-        mutation = ContainerMutation(mutation_rate=0.1)
+        mutation = ContainerMutation(mutation_rate=mutation_rate)
         problem = ContainerProblem(current_blueprint.get_scorers(), constraints)
 
         # We try to optimize an empty container

@@ -5,6 +5,12 @@ from ui.container import Container
 
 
 class ContainerCrossover(Crossover):
+    """
+    Crossover operator for Container objects.
+    This operator performs crossover between two parent Container
+    objects to produce one new child Container.
+    """
+
     def __init__(self):
         super().__init__(n_parents=2, n_offsprings=1)
 

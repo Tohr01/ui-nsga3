@@ -12,6 +12,10 @@ from ui.element import UIElement
 
 @dataclass(kw_only=True, frozen=True)
 class BlueprintContainer:
+    """
+    Blueprint for Container containing required Elements (or other BlueprintContainers) and Scorers.
+    """
+
     label: str
     blueprint_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     elements: list["BlueprintContainer" | tuple[Type[UIElement], dict]]
@@ -111,6 +115,11 @@ class BlueprintContainer:
 
 @dataclass(kw_only=True, frozen=True)
 class RootBlueprint(BlueprintContainer):
+    """
+    Subclass of BlueprintContainer. Should be at the root of every interface definition.
+    Allows definition of the canvas dimensions in pixels.
+    """
+
     width_px: float
     height_px: float
     label: str = "Interface Root"
