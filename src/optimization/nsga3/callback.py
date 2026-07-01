@@ -17,16 +17,24 @@ class ContainerCallback(Callback):
 
     optimization_result: ContainerOptimizationResult
     n_gen: int
+    collect_metrics: bool
     pbar: Optional[tqdm]
 
-    def __init__(self, n_gen: int, optimization_result: ContainerOptimizationResult):
+    def __init__(
+        self,
+        n_gen: int,
+        optimization_result: ContainerOptimizationResult,
+        collect_metrics: bool = True,
+    ):
         """
         Initialize the ContainerCallback with the total number of generations and the optimization result object.
         :param n_gen: Total number of generations for the optimization algorithm.
         :param optimization_result: ContainerOptimizationResult object to store the optimization results.
+        :param collect_metrics: Whether to collect metrics during the optimization process.
         """
         self.optimization_result = optimization_result
         self.n_gen = n_gen
+        self.collect_metrics = collect_metrics
         self.pbar = None
         super().__init__()
 
@@ -35,6 +43,12 @@ class ContainerCallback(Callback):
         if self.pbar is None:
             self.pbar = tqdm(total=self.n_gen, desc="Generations", unit="gen")
         self.pbar.update(1)
+
+        if not algorithm.has_next():
+            self.pbar.close()
+
+        if not self.collect_metrics:
+            return
 
         if algorithm.pop is None:
             raise ValueError("Algorithm population is None. This should not happen.")
@@ -50,7 +64,3 @@ class ContainerCallback(Callback):
         self.optimization_result.df = pd.concat(
             [self.optimization_result.df, pd.DataFrame([data])], ignore_index=True
         )
-        # self.optimization_result.df.loc[len(self.optimization_result.df)] = data
-
-        if not algorithm.has_next():
-            self.pbar.close()

@@ -98,6 +98,7 @@ def run_nsga3_optimization(
     seed: Optional[int],
     constraints: list[Scorer] = [],
     mutation_rate: float = 0.1,
+    collect_metrics: bool = False,
 ) -> dict[str, ContainerOptimizationResult]:
     """
     Runs the NSGA-III optimization algorithm on the given root blueprint.
@@ -112,6 +113,7 @@ def run_nsga3_optimization(
     :param seed: The random seed to use for optimization (pymoo minimize function)
     :param constraints: A list of constraint scorers to apply during optimization (ieq constraints)
     :param mutation_rate: The mutation rate to use for the ContainerMutation operator
+    :param collect_metrics: Whether to record optimization results to disk (included in ContainerOptimizationResult)
 
     :return: A dictionary of blueprint_id to optimized Container
     """
@@ -181,7 +183,9 @@ def run_nsga3_optimization(
             blueprint=current_blueprint, pop_size=pop_size, ref_dir_count=len(ref_dirs)
         )
 
-        callback = ContainerCallback(n_gen, container_optimization_result)
+        callback = ContainerCallback(
+            n_gen, container_optimization_result, collect_metrics
+        )
         algorithm = UNSGA3(
             pop_size=pop_size,
             ref_dirs=ref_dirs,
@@ -193,7 +197,7 @@ def run_nsga3_optimization(
             eliminate_duplicates=False,
         )
 
-        results = minimize(
+        result = minimize(
             problem=problem,
             algorithm=algorithm,
             termination=("n_gen", n_gen),
@@ -201,43 +205,37 @@ def run_nsga3_optimization(
             verbose=False,
         )
 
+        # Store result in optimization result
+        container_optimization_result.result = result
+
         # Extract results from algorithm because pymoo deepcopies callback + algorithm meaning our original
         # reference to the optimization result is not updated
-        algorithm = cast(UNSGA3, results.algorithm)
+        algorithm = cast(UNSGA3, result.algorithm)
         callback = cast(ContainerCallback, algorithm.callback)
         container_optimization_result = callback.optimization_result
 
         # Type validation for results
         if not (
-            isinstance(results.X, np.ndarray)
-            and isinstance(results.F, np.ndarray)
-            and isinstance(results.CV, np.ndarray)
+            isinstance(result.X, np.ndarray)
+            and isinstance(result.F, np.ndarray)
+            and isinstance(result.CV, np.ndarray)
         ):
             raise RuntimeError(
                 f"Optimization did not return any solutions for container {current_blueprint.label}"
             )
 
-        # 1. Containers with lowest constraint violation
-        # 2. Among those pick container with best objective values (summing all objectives; minimize)
-        # TODO: Remove debugging code
-        import pickle
-
-        pickle.dump(
-            {"containers": results.X, "objective_functions": results.F},
-            open(f"results_{current_blueprint.label}.pkl", "wb"),
-        )
-
         # Pick a solution
         # 1. Find feasible solutions (CV <= 0)
         # 2. If feasible solutions exist, choose the one with min weighted sum of objectives
         # 3. If no feasible solutions exist, choose the one with min constraint violation
-        feasible_mask = results.CV[:, 0] <= 0
+        feasible_mask = result.CV[:, 0] <= 0
 
+        # TODO: Make this work for one objective
         if feasible_mask.any():
             decomb = WeightedSum()
 
-            F_feasible = results.F[feasible_mask]
-            X_feasible = results.X[feasible_mask]
+            F_feasible = result.F[feasible_mask]
+            X_feasible = result.X[feasible_mask]
             weights = current_blueprint.get_normalized_scorer_weight_arr()
             best_feasible_container_idx = decomb.do(
                 F=F_feasible, weights=weights
@@ -248,9 +246,9 @@ def run_nsga3_optimization(
             logger.warning(
                 "No feasible solutions found, picking best among all solutions with lowest constraint violation"
             )
-            best_container_idx = results.CV[:, 0].argmin()
-            best_F = results.F[best_container_idx]
-            best_container = cast(Container, results.X[best_container_idx, 0])
+            best_container_idx = result.CV[:, 0].argmin()
+            best_F = result.F[best_container_idx]
+            best_container = cast(Container, result.X[best_container_idx, 0])
 
         # Map the container id to the size of the child container
         container_sizes = {}
@@ -279,9 +277,7 @@ def run_nsga3_optimization(
             container=best_container, summed_score=best_F.sum()
         )
         container_optimization_result.best_container = best_optimized_container
-        container_optimization_result.execution_time_sec = cast(
-            float, results.exec_time
-        )
+        container_optimization_result.execution_time_sec = cast(float, result.exec_time)
 
         optimized_containers[current_blueprint.blueprint_id] = (
             container_optimization_result

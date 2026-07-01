@@ -10,5 +10,7 @@ MAX_OBJECTIVES_DAS_DENNIS = 4
 MIN_FONT_SIZE_PX = 2
 DEFAULT_FONT_FAMILY = "Arial"
 
-# Rendering settings
+# Directory paths
 OUTPUT_DIR = Path("output")
+HTML_OUTPUT_DIR = OUTPUT_DIR / "html"
+OPTIMIZATION_RESULTS_DIR = OUTPUT_DIR / "optimization_results"

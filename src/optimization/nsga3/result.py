@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import pandas as pd
+from pymoo.core.result import Result
 
 from ui.blueprint import BlueprintContainer
 from ui.container import Container
@@ -24,3 +25,4 @@ class ContainerOptimizationResult:
     df: pd.DataFrame = field(
         default_factory=lambda: pd.DataFrame(columns=["generation", "F", "G", "CV"])
     )
+    result: Optional[Result] = None
