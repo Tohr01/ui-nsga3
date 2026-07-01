@@ -1,5 +1,9 @@
 from typing import Optional
 
+from logger import get_new_logger
+
+logger = get_new_logger("ui.canvas_context")
+
 
 class CanvasContext:
     """
@@ -19,6 +23,7 @@ class CanvasContext:
         return CanvasContext._instance
 
     def set_canvas_dim(self, width_px: float, height_px: float):
+        logger.debug(f"Setting canvas dimensions to ({width_px}px, {height_px}px)")
         self.width_px = width_px
         self.height_px = height_px
         self.aspect_ratio = width_px / height_px

@@ -9,7 +9,7 @@ from ui.blueprint import BlueprintContainer, RootBlueprint
 interface_blueprint = RootBlueprint(
     width_px=1920,
     height_px=1080,
-    label="Interface",
+    label="Baselayout",
     elements=[
         # BlueprintContainer(label="Header", elements=[], scorers=[]),
         # BlueprintContainer(label="Content", elements=[], scorers=[]),

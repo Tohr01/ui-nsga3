@@ -21,6 +21,7 @@ from constants import (
     HTML_OUTPUT_DIR,
     OPTIMIZATION_RESULTS_DIR,
 )
+from logger import get_new_logger
 from optimization.nsga3 import run_nsga3_optimization
 from rendering.renderer import HTMLRenderer
 from scoring.constraints.min_size import MinSizeScorer
@@ -77,13 +78,27 @@ def setup_logger(level: str = "INFO"):
 
 
 if __name__ == "__main__":
+    args = parser.parse_args()
+
+    args_text = f"""
+Running optimization with the following parameters:
+Generations:         \t{args.generations}
+Min Population Size: \t{args.min_pop_size}
+Seed:                \t{args.seed}
+Collect Metrics:     \t{args.collect_metrics}
+    """
+    print(args_text)
+
     setup_logger("DEBUG")
+    logger = get_new_logger("main")
 
     # Init output directories
+    logger.info(
+        f"Creating output directories: {HTML_OUTPUT_DIR}, {OPTIMIZATION_RESULTS_DIR}"
+    )
     HTML_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OPTIMIZATION_RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    args = parser.parse_args()
     SEED = args.seed
     if SEED is not None:
         random.seed(SEED)
@@ -115,7 +130,10 @@ if __name__ == "__main__":
     )
 
     for blueprint_id, optimized_container in container_optimzation_results.items():
-        print(blueprint_id, optimized_container.best_container.summed_score)
+        print(
+            optimized_container.blueprint.label,
+            optimized_container.best_container.summed_score,
+        )
 
     # Assemble final ui
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]
