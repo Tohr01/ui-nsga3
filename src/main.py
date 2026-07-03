@@ -23,6 +23,7 @@ from constants import (
 )
 from logger import get_new_logger
 from optimization.nsga3 import run_nsga3_optimization
+from optimization.nsga3.result import print_result_overview
 from rendering.renderer import HTMLRenderer
 from scoring.constraints.min_size import MinSizeScorer
 from scoring.constraints.padding import PaddingScorer
@@ -129,16 +130,14 @@ Collect Metrics:     \t{args.collect_metrics}
         container_optimzation_results
     )
 
-    for blueprint_id, optimized_container in container_optimzation_results.items():
-        print(
-            optimized_container.blueprint.label,
-            optimized_container.best_container.summed_score,
-        )
-
     # Assemble final ui
+    logger.info("Writing assembled best UI to disk")
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]
     HTMLRenderer.write_container_to_html(
         optimized_root_container,
         HTML_OUTPUT_DIR / "final_optimized_ui.html",
         optimized_containers,
     )
+
+    # Print scores
+    print_result_overview(container_optimzation_results)
