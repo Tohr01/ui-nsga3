@@ -118,7 +118,6 @@ class AspectImage(UIElement):
     def to_html_element(self) -> str:
         # Read image using pillow and convert to base64 string
         styles = {
-            "position": "absolute",
             "left": f"{self.position.x * 100}%",
             "top": f"{self.position.y * 100}%",
             "height": f"{self.size.height * 100}%",

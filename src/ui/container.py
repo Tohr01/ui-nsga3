@@ -87,7 +87,6 @@ class Container(Reproducible):
             "y": f"{(y or 0) * 100}%",
             "height": f"{(height or 1) * 100}%",
             "width": f"{(width or 1) * 100}%",
-            "position": "absolute",
         }
         if x is not None:
             styles["left"] = f"{x * 100}%"

@@ -3,7 +3,6 @@ from typing import Optional, cast
 
 import numpy as np
 from pymoo.algorithms.moo.unsga3 import UNSGA3
-from pymoo.decomposition.weighted_sum import WeightedSum
 from pymoo.optimize import minimize
 from pymoo.util.ref_dirs import get_reference_directions
 
@@ -19,11 +18,11 @@ from optimization.nsga3.problem import ContainerProblem
 from optimization.nsga3.repair import CanvasBoundsRepair
 from optimization.nsga3.result import ContainerOptimizationResult, OptimizedContainer
 from optimization.nsga3.sampling import ContainerSampling
+from optimization.nsga3.select import select_best_container
 from scoring.scorer import Scorer
 from ui.blueprint import BlueprintContainer, RootBlueprint
 from ui.canvas_context import CanvasContext
 from ui.components.placeholder_container import PlaceholderContainer
-from ui.container import Container
 from ui.element import TextlikeElement
 from ui.text_measure import TextMeasure
 
@@ -225,30 +224,9 @@ def run_nsga3_optimization(
             )
 
         # Pick a solution
-        # 1. Find feasible solutions (CV <= 0)
-        # 2. If feasible solutions exist, choose the one with min weighted sum of objectives
-        # 3. If no feasible solutions exist, choose the one with min constraint violation
-        feasible_mask = result.CV[:, 0] <= 0
-
-        # TODO: Make this work for one objective
-        if feasible_mask.any():
-            decomb = WeightedSum()
-
-            F_feasible = result.F[feasible_mask]
-            X_feasible = result.X[feasible_mask]
-            weights = current_blueprint.get_normalized_scorer_weight_arr()
-            best_feasible_container_idx = decomb.do(
-                F=F_feasible, weights=weights
-            ).argmin()
-            best_F = F_feasible[best_feasible_container_idx]
-            best_container = cast(Container, X_feasible[best_feasible_container_idx, 0])
-        else:
-            logger.warning(
-                "No feasible solutions found, picking best among all solutions with lowest constraint violation"
-            )
-            best_container_idx = result.CV[:, 0].argmin()
-            best_F = result.F[best_container_idx]
-            best_container = cast(Container, result.X[best_container_idx, 0])
+        best_F, best_container = select_best_container(
+            current_blueprint, result.F, result.CV, result.X
+        )
 
         # Map the container id to the size of the child container
         container_sizes = {}

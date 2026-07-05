@@ -5,7 +5,8 @@ from pymoo.algorithms.moo.unsga3 import UNSGA3
 from pymoo.core.callback import Callback
 from tqdm import tqdm
 
-from optimization.nsga3.result import ContainerOptimizationResult
+from optimization.nsga3.result import ContainerOptimizationResult, OptimizedContainer
+from optimization.nsga3.select import select_best_container
 
 
 class ContainerCallback(Callback):
@@ -53,11 +54,22 @@ class ContainerCallback(Callback):
         if algorithm.pop is None:
             raise ValueError("Algorithm population is None. This should not happen.")
 
+        F = algorithm.pop.get("F")  # Objective values
+        G = algorithm.pop.get("G")  # Constraint violation vectors
+        CV = algorithm.pop.get("CV")  # Aggregated constraint violation
+        X = algorithm.pop.get("X")  # Containers
+        best_F, best_container = select_best_container(
+            self.optimization_result.blueprint, F, CV, X, supress_logger=True
+        )
+
         data = {
             "generation": algorithm.n_gen,
-            "F": algorithm.pop.get("F"),  # Objective values
-            "G": algorithm.pop.get("G"),  # Constraint violation
-            "CV": algorithm.pop.get("CV"),  # Aggregated constraint violation
+            "F": F,
+            "G": G,
+            "CV": CV,
+            "best_container": OptimizedContainer(
+                best_container, best_F.sum()
+            ),  # wrt all objectives & weights
         }
 
         # Append to the optimization result df

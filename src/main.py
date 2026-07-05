@@ -20,6 +20,7 @@ from constants import (
     BASE_LOGGER_NAME,
     HTML_OUTPUT_DIR,
     OPTIMIZATION_RESULTS_DIR,
+    OUTPUT_DIR,
 )
 from logger import get_new_logger
 from optimization.nsga3 import run_nsga3_optimization
@@ -61,6 +62,12 @@ parser.add_argument(
     action="store_true",
     help="Whether to record optimization results to disk (default: False)",
 )
+parser.add_argument(
+    "-v",
+    "--video",
+    action="store_true",
+    help="Whether to render a video of the optimization process (default: False)",
+)
 
 
 def setup_logger(level: str = "INFO"):
@@ -87,6 +94,7 @@ Generations:         \t{args.generations}
 Min Population Size: \t{args.min_pop_size}
 Seed:                \t{args.seed}
 Collect Metrics:     \t{args.collect_metrics}
+Render Video:        \t{args.video}
     """
     print(args_text)
 
@@ -133,7 +141,7 @@ Collect Metrics:     \t{args.collect_metrics}
     # Assemble final ui
     logger.info("Writing assembled best UI to disk")
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]
-    HTMLRenderer.write_container_to_html(
+    HTMLRenderer.get_instance().write_container_to_html(
         optimized_root_container,
         HTML_OUTPUT_DIR / "final_optimized_ui.html",
         optimized_containers,
@@ -141,3 +149,13 @@ Collect Metrics:     \t{args.collect_metrics}
 
     # Print scores
     print_result_overview(container_optimzation_results)
+
+    if args.video:
+        logger.info("Rendering generation progression video")
+        # Render generation progression video
+        HTMLRenderer.get_instance().render_generation_progression_video(
+            interface_blueprint.blueprint_id,
+            container_optimzation_results,
+            OUTPUT_DIR / "generation_progression.mp4",
+        )
+        logger.info("Done! All output written to disk.")

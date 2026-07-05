@@ -205,7 +205,6 @@ class PaddingButton(TextlikeElement):
     def to_html_element(self) -> str:
         cc = CanvasContext.get_instance()
         styles = {
-            "position": "absolute",
             "margin": "0",
             "padding-left": f"{self.padding_width * cc.width_px}px",
             "padding-right": f"{self.padding_width * cc.width_px}px",

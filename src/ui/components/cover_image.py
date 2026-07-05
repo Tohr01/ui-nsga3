@@ -66,7 +66,6 @@ class CoverImage(UIElement):
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()
         styles = {
-            "position": "absolute",
             "left": f"{x * 100}%",
             "top": f"{y * 100}%",
             "width": f"{w * 100}%",

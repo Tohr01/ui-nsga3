@@ -54,7 +54,6 @@ class PlaceholderContainer(UIElement):
             "height": f"{h * 100}%",
             "background-color": "transparent",
             "border": "2px dashed black",
-            "position": "absolute",
         }
         attributes = {
             "label": cast(str, self.label),

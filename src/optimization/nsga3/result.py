@@ -22,8 +22,11 @@ class ContainerOptimizationResult:
     best_container: Optional[OptimizedContainer] = None
     execution_time_sec: float = 0.0
     optimized_by_algorithm: bool = True
+    # TODO: Type annotate
     df: pd.DataFrame = field(
-        default_factory=lambda: pd.DataFrame(columns=["generation", "F", "G", "CV"])
+        default_factory=lambda: pd.DataFrame(
+            columns=["generation", "F", "G", "CV", "best_container"]
+        )
     )
     result: Optional[Result] = None
 
@@ -46,3 +49,4 @@ def print_result_overview(optimization_results: dict[str, ContainerOptimizationR
         print(f"{label:<{w}}{score}")
 
     print(f"\nAggregated UI score: {aggr_ui_score}")
+    print()

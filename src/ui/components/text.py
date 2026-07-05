@@ -134,7 +134,6 @@ class Text(TextlikeElement):
 
     def to_html_element(self) -> str:
         styles = {
-            "position": "absolute",
             "margin": "0",
             "padding": "0",
             "font-family": self.font_family,
