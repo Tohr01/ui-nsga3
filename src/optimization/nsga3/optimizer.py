@@ -204,9 +204,6 @@ def run_nsga3_optimization(
             verbose=False,
         )
 
-        # Store result in optimization result
-        container_optimization_result.result = result
-
         # Extract results from algorithm because pymoo deepcopies callback + algorithm meaning our original
         # reference to the optimization result is not updated
         algorithm = cast(UNSGA3, result.algorithm)
@@ -225,7 +222,10 @@ def run_nsga3_optimization(
 
         # Pick a solution
         best_F, best_container = select_best_container(
-            current_blueprint, result.F, result.CV, result.X
+            current_blueprint,
+            result.F.reshape(-1, len(current_blueprint.scorers)),
+            result.CV.flatten(),
+            result.X.flatten(),
         )
 
         # Map the container id to the size of the child container
@@ -265,6 +265,6 @@ def run_nsga3_optimization(
         logger.info("Clearing text measurement cache...")
         text_measure.clear_cache()
 
-    TextMeasure.get_instance().close()
+    TextMeasure.close()
 
     return optimized_containers

@@ -76,5 +76,4 @@ class GoldenRatioTextSizeScorer(Scorer):
             for element in elements:
                 penalty += abs(element.font_size - target) / target
 
-        # TODO: Maybe look again into that?
         return min(penalty / len(text_elements), 1.0)  # Clamp to [0; 1.0]

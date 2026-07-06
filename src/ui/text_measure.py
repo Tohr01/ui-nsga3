@@ -150,10 +150,13 @@ class TextMeasure:
             )
         return self._max_fitting_cache[key]
 
-    def close(self):
+    @classmethod
+    def close(cls):
         """
-        Close and stop playwright instance and reset singleton instance
+        Close and stop the playwright instance and reset the singleton instance.
         """
-        self._browser.close()
-        self._pw.stop()
-        self._instance = None
+        if cls._instance is not None:
+            cls._instance._page.close()
+            cls._instance._browser.close()
+            cls._instance._pw.stop()
+            cls._instance = None

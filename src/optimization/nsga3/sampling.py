@@ -1,5 +1,5 @@
 import numpy as np
-from pymoo.util.misc import Sampling
+from pymoo.core.sampling import Sampling
 
 from optimization.nsga3.repair import CanvasBoundsRepair
 from ui.blueprint import BlueprintContainer

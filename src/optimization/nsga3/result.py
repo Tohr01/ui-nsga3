@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import pandas as pd
-from pymoo.core.result import Result
 
 from ui.blueprint import BlueprintContainer
 from ui.container import Container
@@ -22,13 +21,13 @@ class ContainerOptimizationResult:
     best_container: Optional[OptimizedContainer] = None
     execution_time_sec: float = 0.0
     optimized_by_algorithm: bool = True
-    # TODO: Type annotate
+    # F: 2D np.array; G: 2D np.array;
+    # CV: 1D np.array; best_container: OptimizedContainer
     df: pd.DataFrame = field(
         default_factory=lambda: pd.DataFrame(
             columns=["generation", "F", "G", "CV", "best_container"]
         )
     )
-    result: Optional[Result] = None
 
 
 def print_result_overview(optimization_results: dict[str, ContainerOptimizationResult]):
@@ -42,6 +41,9 @@ def print_result_overview(optimization_results: dict[str, ContainerOptimizationR
         for optimization_result in optimization_results.values()
         if optimization_result.best_container is not None
     }
+    if not label_score_dict:
+        raise ValueError("No best containers found in optimization results.")
+
     w = max(len(label) for label in label_score_dict.keys()) + 2
 
     print()

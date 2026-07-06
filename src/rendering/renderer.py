@@ -187,10 +187,10 @@ class HTMLRenderer:
             raise RuntimeError(
                 f"ffmpeg command failed with error: {e}. Please check if ffmpeg is installed."
             )
-
-        # Remove tempdir
-        logger.debug(f"Removing temporary directory {tmp_dir_location}")
-        shutil.rmtree(tmp_dir_location)
+        finally:
+            # Remove tempdir
+            logger.debug(f"Removing temporary directory {tmp_dir_location}")
+            shutil.rmtree(tmp_dir_location)
 
     def write_container_to_html(
         self,
@@ -225,7 +225,7 @@ class HTMLRenderer:
         """
         Format the HTML template with given canvas width, height, and container HTML string.
         Optionally adds a header with the blueprint label and generation number.
-        NOTE: Both blueprint_label and generation_number must be provided together or not at all.
+        Both blueprint_label and generation_number must be provided together or not at all.
 
         :param canvas_width: Width of the canvas in pixels.
         :param canvas_height: Height of the canvas in pixels.
@@ -281,3 +281,14 @@ class HTMLRenderer:
             main_element.insert(0, ui_info_wrapper)
 
         return html.prettify()
+
+    @classmethod
+    def close(cls):
+        """
+        Close and stop the playwright instance and reset the singleton instance.
+        """
+        if cls._instance is not None:
+            cls._instance._page.close()
+            cls._instance._browser.close()
+            cls._instance._pw.stop()
+            cls._instance = None

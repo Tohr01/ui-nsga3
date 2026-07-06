@@ -113,7 +113,6 @@ content = BlueprintContainer(
                 "label": "Product_Image",
             },
         ),
-        # BlueprintContainer(label="Product_Details", elements=[], scorers=[]),
         product_details,
     ],
     scorers=[

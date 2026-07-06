@@ -56,8 +56,8 @@ class ContainerCallback(Callback):
 
         F = algorithm.pop.get("F")  # Objective values
         G = algorithm.pop.get("G")  # Constraint violation vectors
-        CV = algorithm.pop.get("CV")  # Aggregated constraint violation
-        X = algorithm.pop.get("X")  # Containers
+        CV = algorithm.pop.get("CV").flatten()  # Aggregated constraint violation
+        X = algorithm.pop.get("X").flatten()  # Containers
         best_F, best_container = select_best_container(
             self.optimization_result.blueprint, F, CV, X, supress_logger=True
         )

@@ -20,7 +20,7 @@ class EquilibriumScorer(Scorer):
     MAX_PENALTY = sqrt(0.5**2 + 0.5**2)
 
     def score(self, container: Container) -> float:
-        # NOTE: WHEN CHANGING THIS CHANGE NORMALIZATION
+        # NOTE: When changing this change the normalization
         x_center = 0.5
         y_center = 0.5
 

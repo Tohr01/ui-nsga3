@@ -18,8 +18,8 @@ class MaxIconSizeScorer(Scorer):
         (accessed May 20, 2026).
     """
 
-    MAX_TOUCH_TARGET_WIDTH_PX = 48
-    MAX_TOUCH_TARGET_HEIGHT_PX = 48
+    MAX_ICON_WIDTH_PX = 48
+    MAX_ICON_HEIGHT_PX = 48
 
     def score(self, container: Container) -> float:
         penalty = 0.0
@@ -37,20 +37,19 @@ class MaxIconSizeScorer(Scorer):
             h_px = h * container.height_px
 
             # Guard against small canvas using the max
-            # NOTE: If the canvas is smaller the penalty can get big
-            # TODO: Maybe change this behavior
             max_canvas_w_overhead = max(
-                1.0, container.width_px - self.MAX_TOUCH_TARGET_WIDTH_PX
+                1.0, container.width_px - self.MAX_ICON_WIDTH_PX
             )
             max_canvas_h_overhead = max(
-                1.0, container.height_px - self.MAX_TOUCH_TARGET_HEIGHT_PX
+                1.0, container.height_px - self.MAX_ICON_HEIGHT_PX
             )
 
-            w_penalty = (
-                max(0.0, w_px - self.MAX_TOUCH_TARGET_WIDTH_PX) / max_canvas_w_overhead
+            # Calculate penalty and clamp to [0, 1]
+            w_penalty = min(
+                max(0.0, w_px - self.MAX_ICON_WIDTH_PX) / max_canvas_w_overhead, 1.0
             )
-            h_penalty = (
-                max(0.0, h_px - self.MAX_TOUCH_TARGET_HEIGHT_PX) / max_canvas_h_overhead
+            h_penalty = min(
+                max(0.0, h_px - self.MAX_ICON_HEIGHT_PX) / max_canvas_h_overhead, 1.0
             )
             penalty += (w_penalty + h_penalty) / 2
             count_icon_elements += 1

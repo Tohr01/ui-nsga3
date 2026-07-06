@@ -52,7 +52,7 @@ class ProximityScorer(Scorer):
             dist_matrix = np.zeros((n, n))
             for i, j in combinations(range(len(elements)), 2):
                 d = self._bbox_distance(container, elements[i], elements[j])
-                # NOTE: Matrix is symmetic as scipy minimum_spanning_tree computes the MST for
+                # Matrix is symmetic as scipy minimum_spanning_tree computes the MST for
                 # undirected graphs.
                 dist_matrix[i, j] = (
                     d if d > 0 else 1e-9
