@@ -130,7 +130,11 @@ Render Video:        \t{args.video}
     if args.collect_metrics:
         pickle.dump(
             container_optimzation_results,
-            open(OPTIMIZATION_RESULTS_DIR / "container_optimization_results.pkl", "wb"),
+            open(
+                OPTIMIZATION_RESULTS_DIR
+                / f"optimization_results-{args.generations}.pkl",
+                "wb",
+            ),
         )
 
     # Convert to optimized containers for easier rendering
@@ -143,7 +147,7 @@ Render Video:        \t{args.video}
     optimized_root_container = optimized_containers[interface_blueprint.blueprint_id]
     HTMLRenderer.get_instance().write_container_to_html(
         optimized_root_container,
-        HTML_OUTPUT_DIR / "final_optimized_ui.html",
+        HTML_OUTPUT_DIR / f"optimized_ui-{args.generations}.html",
         optimized_containers,
     )
 

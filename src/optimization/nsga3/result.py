@@ -30,12 +30,23 @@ class ContainerOptimizationResult:
     )
 
 
-def print_result_overview(optimization_results: dict[str, ContainerOptimizationResult]):
-    aggr_ui_score = sum(
+def calc_aggregated_score(
+    optimization_results: dict[str, ContainerOptimizationResult],
+) -> float:
+    """
+    Calculates the aggregated score from the optimization results by summing the best container
+    scores for result.
+    :param optimization_results: A dict containing the optimization results for each blueprint id.
+    :return: The aggregated score for the optimization results.
+    """
+    return sum(
         optimization_result.best_container.summed_score
         for optimization_result in optimization_results.values()
         if optimization_result.best_container is not None
     )
+
+
+def print_result_overview(optimization_results: dict[str, ContainerOptimizationResult]):
     label_score_dict = {
         optimization_result.blueprint.label: optimization_result.best_container.summed_score
         for optimization_result in optimization_results.values()
@@ -50,5 +61,6 @@ def print_result_overview(optimization_results: dict[str, ContainerOptimizationR
     for label, score in label_score_dict.items():
         print(f"{label:<{w}}{score}")
 
+    aggr_ui_score = calc_aggregated_score(optimization_results)
     print(f"\nAggregated UI score: {aggr_ui_score}")
     print()
