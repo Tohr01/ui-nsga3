@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional
 
+from bs4 import Tag
 from numpy import clip
 
 from genetic.attributes.position import Position
@@ -54,7 +55,7 @@ class UIElement(Reproducible, ABC):
         self.config = config
 
     @abstractmethod
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         pass
 
     def clamp_to_canvas(self):

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from bs4 import BeautifulSoup, Tag
 from numpy import clip
 from numpy.random import randint
 
@@ -9,7 +10,7 @@ from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
-from rendering.util import styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.element import TextlikeElement, TextlikeElementConfig
 from ui.text_measure import TextMeasure
 
@@ -132,7 +133,7 @@ class Text(TextlikeElement):
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         styles = {
             "margin": "0",
             "padding": "0",
@@ -142,4 +143,10 @@ class Text(TextlikeElement):
             "top": f"{self.position.y * 100}%",
             "white-space": "nowrap",
         }
-        return f'<p style="{styles_dict_to_str(styles)}">{self.text}</p>'
+        paragraph = new_bs4_tag("p", style=styles_dict_to_str(styles))
+
+        # Parse <br> tags and add them to the paragraph tag
+        text_parsed = BeautifulSoup(self.text, "html.parser")
+        while text_parsed.contents:
+            paragraph.append(text_parsed.contents[0])
+        return paragraph

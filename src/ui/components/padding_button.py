@@ -1,5 +1,6 @@
 from typing import Optional
 
+from bs4 import Tag
 from numpy import clip
 from numpy.random import randint, uniform
 
@@ -8,7 +9,7 @@ from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
-from rendering.util import styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.canvas_context import CanvasContext
 from ui.element import TextlikeElement, TextlikeElementConfig
 from ui.text_measure import TextMeasure
@@ -202,7 +203,7 @@ class PaddingButton(TextlikeElement):
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         cc = CanvasContext.get_instance()
         styles = {
             "margin": "0",
@@ -219,4 +220,6 @@ class PaddingButton(TextlikeElement):
             "white-space": "nowrap",
             "border-width": "0px",
         }
-        return f'<button style="{styles_dict_to_str(styles)}">{self.text}</button>'
+        button = new_bs4_tag("button", style=styles_dict_to_str(styles))
+        button.string = self.text
+        return button

@@ -67,11 +67,11 @@ class HTMLRenderer:
         :param output_path: The path to write the PNG file to.
         :param containers: Optional dictionary of containers to render (used for nested/children containers)
         """
-        container_html_str = container.to_html_element(containers=containers)
+        container_html_element = container.to_html_element(containers=containers)
         html_str = self._format_html(
             container.width_px,
             container.height_px,
-            container_html_str,
+            container_html_element,
             blueprint_label,
             generation_number,
         )
@@ -205,12 +205,12 @@ class HTMLRenderer:
         :param containers: Optional dictionary of containers to render (used for nested/children containers)
         """
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        container_html_str = container.to_html_element(containers=containers)
+        container_html_element = container.to_html_element(containers=containers)
         # Set canvas width and height to main element
         formatted_html = self._format_html(
             canvas_width=container.width_px,
             canvas_height=container.height_px,
-            container_html_str=container_html_str,
+            container_html_element=container_html_element,
         )
         output_path.write_text(formatted_html)
 
@@ -218,7 +218,7 @@ class HTMLRenderer:
         self,
         canvas_width: float,
         canvas_height: float,
-        container_html_str: str,
+        container_html_element: bs4.Tag,
         blueprint_label: Optional[str] = None,
         generation_number: Optional[int] = None,
     ):
@@ -229,7 +229,7 @@ class HTMLRenderer:
 
         :param canvas_width: Width of the canvas in pixels.
         :param canvas_height: Height of the canvas in pixels.
-        :param container_html_str: HTML string of the container to render.
+        :param container_html_element: bs4 Tag of the container to render.
         :param blueprint_label: Optional label of the blueprint being optimized.
         :param generation_number: Optional current generation number of the optimization process.
         :return: Prettified HTML string
@@ -250,9 +250,8 @@ class HTMLRenderer:
             }
         )
 
-        container_html_fragment = bs4.BeautifulSoup(container_html_str, "html.parser")
-        for child in container_html_fragment.contents:
-            canvas_root_element.append(child)
+        while container_html_element.contents:
+            canvas_root_element.append(container_html_element.contents[0])
 
         main_element.append(canvas_root_element)
 

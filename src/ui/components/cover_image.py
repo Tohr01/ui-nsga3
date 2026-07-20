@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from bs4 import Tag
+
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
-from rendering.util import styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.element import ElementConfig, UIElement
 from ui.enums import ImageType
 from ui.util import img_path_to_base64_str
@@ -62,7 +64,7 @@ class CoverImage(UIElement):
         if self.config.enable_size_mutation:
             self.size.mutate(mutation_rate)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()
         styles = {
@@ -72,4 +74,9 @@ class CoverImage(UIElement):
             "height": f"{h * 100}%",
             "object-fit": "cover",
         }
-        return f'<img src="{img_path_to_base64_str(self.img_path)}" style="{styles_dict_to_str(styles)}" />'
+        img = new_bs4_tag(
+            "img",
+            style=styles_dict_to_str(styles),
+            src=img_path_to_base64_str(self.img_path),
+        )
+        return img

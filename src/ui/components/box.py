@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from bs4 import Tag
+
 from genetic.attributes.position import Position
 from genetic.attributes.rgbcolor import RGBColor
 from genetic.attributes.size import Size
-from rendering.util import styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.element import ElementConfig, UIElement
 
 
@@ -64,7 +66,7 @@ class Box(UIElement):
         if self.config.enable_bg_color_mutation:
             self.bg_color.mutate(mutation_rate)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()
         styles = {
@@ -74,4 +76,5 @@ class Box(UIElement):
             "height": f"{h * 100}%",
             "background-color": self.bg_color.to_html_str(),
         }
-        return f'<div style="{styles_dict_to_str(styles)}"></div>'
+        div = new_bs4_tag("div", style=styles_dict_to_str(styles))
+        return div

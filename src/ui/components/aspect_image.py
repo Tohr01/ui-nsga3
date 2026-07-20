@@ -3,13 +3,14 @@ from dataclasses import dataclass
 from typing import Optional
 
 import numpy.random as random
+from bs4 import Tag
 from numpy import clip
 
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
 from genetic.mutation import normal_distribution_mutate
 from genetic.recombination import intermediate_recombination
-from rendering.util import styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.canvas_context import CanvasContext
 from ui.element import ElementConfig, UIElement
 from ui.enums import ImageType
@@ -115,7 +116,7 @@ class AspectImage(UIElement):
         self.position.x = clip(self.position.x, 0, 1 - self.size.width)
         self.position.y = clip(self.position.y, 0, 1 - self.size.height)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         # Read image using pillow and convert to base64 string
         styles = {
             "left": f"{self.position.x * 100}%",
@@ -123,4 +124,9 @@ class AspectImage(UIElement):
             "height": f"{self.size.height * 100}%",
             "width": f"{self.size.width * 100}%",
         }
-        return f'<img src="{img_path_to_base64_str(self.img_path)}" style="{styles_dict_to_str(styles)}" />'
+        img = new_bs4_tag(
+            "img",
+            style=styles_dict_to_str(styles),
+            src=img_path_to_base64_str(self.img_path),
+        )
+        return img

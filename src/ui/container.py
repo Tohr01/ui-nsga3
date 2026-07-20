@@ -1,7 +1,9 @@
 from typing import Optional
 
+from bs4 import Tag
+
 from genetic.reproducible import Reproducible
-from rendering.util import attributes_dict_to_str, styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.components.placeholder_container import PlaceholderContainer
 from ui.element import UIElement
 
@@ -70,17 +72,18 @@ class Container(Reproducible):
         y: Optional[float] = None,
         width: Optional[float] = None,
         height: Optional[float] = None,
-    ) -> str:
+    ) -> Tag:
         """
         Renders the container and its elements a HTML string. If the container contains PlaceholderContainers,
         they will be replaced with the optimized containers from the containers dictionary if they exist.
+        If any element has a label attribute it will be added as the data-label attribute to the respective html string.
 
         :param containers: A dictionary of blueprint_id to Container instances. Used to replace PlaceholderContainers
         :param x: The x position of the container in percentage (0-1).
         :param y: The y position of the container in percentage (0-1). If None, the container will be positioned at 0.
         :param width: The width of the container in percentage (0-1). If None, the container will be sized to 100%.
         :param height: The height of the container in percentage (0-1). If None, the container will be sized to 100%.
-        :return: HTML string of the rendered container and its elements.
+        :return: bs4 Tag containing the container and its elements as HTML.
         """
         styles = {
             "x": f"{(x or 0) * 100}%",
@@ -97,7 +100,9 @@ class Container(Reproducible):
         if height is not None:
             styles["height"] = f"{height * 100}%"
 
-        elements_html_strs = []
+        div = new_bs4_tag("div", style=styles_dict_to_str(styles))
+        div["data-label"] = self.label
+
         for element in self.elements:
             # Check whether element is a placeholder container and if the user provided the Container
             # Recursively get the html str of the container
@@ -107,7 +112,7 @@ class Container(Reproducible):
                 and element.blueprint_id in containers
             ):
                 container = containers[element.blueprint_id]
-                element_html_str = container.to_html_element(
+                html_element = container.to_html_element(
                     containers=containers,
                     x=element.position.x,
                     y=element.position.y,
@@ -115,14 +120,11 @@ class Container(Reproducible):
                     height=element.size.height,
                 )
             else:
-                element_html_str = element.to_html_element()
+                html_element = element.to_html_element()
 
-            elements_html_strs.append(element_html_str)
+            if element.label:
+                html_element["data-label"] = element.label
 
-        attributes = {
-            "style": styles_dict_to_str(styles),
-            "label": self.label,
-        }
-        return f"""<div {attributes_dict_to_str(attributes)}>
-            {"".join(elements_html_strs)}
-        </div>"""
+            div.append(html_element)
+
+        return div

@@ -1,8 +1,10 @@
 from typing import Optional, cast
 
+from bs4 import Tag
+
 from genetic.attributes.position import Position
 from genetic.attributes.size import Size
-from rendering.util import attributes_dict_to_str, styles_dict_to_str
+from rendering.util import new_bs4_tag, styles_dict_to_str
 from ui.element import UIElement
 
 
@@ -44,7 +46,7 @@ class PlaceholderContainer(UIElement):
         self.position.mutate(mutation_rate)
         self.size.mutate(mutation_rate)
 
-    def to_html_element(self) -> str:
+    def to_html_element(self) -> Tag:
         x, y = self.position.get_xy()
         w, h = self.size.get_wh()
         styles = {
@@ -55,8 +57,5 @@ class PlaceholderContainer(UIElement):
             "background-color": "transparent",
             "border": "2px dashed black",
         }
-        attributes = {
-            "label": cast(str, self.label),
-            "style": styles_dict_to_str(styles),
-        }
-        return f"<div {attributes_dict_to_str(attributes)}></div>"
+        div = new_bs4_tag("div", style=styles_dict_to_str(styles))
+        return div

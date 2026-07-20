@@ -1,3 +1,18 @@
+from bs4 import BeautifulSoup, Tag
+
+_soup = BeautifulSoup("", "html.parser")
+
+
+def new_bs4_tag(tag_name: str, **attrs) -> Tag:
+    """
+    Create a new bs4 Tag with the given tag name and attributes.
+    :param tag_name: The name of the HTML tag to create (e.g., 'div').
+    :param attrs: A dictionary of attributes to set on the tag.
+    :return: A new bs4 Tag object.
+    """
+    return _soup.new_tag(tag_name, **attrs)
+
+
 def styles_dict_to_str(styles_dict: dict) -> str:
     """
     Convert a dictionary of CSS styles to a string that can be used in an HTML style attribute.
