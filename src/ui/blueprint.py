@@ -20,6 +20,7 @@ class BlueprintContainer:
     blueprint_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     elements: list["BlueprintContainer" | tuple[Type[UIElement], dict]]
     scorers: list[tuple[Scorer, float]]
+    additional_constraints: list[Scorer] = field(default_factory=list)
 
     flattend_elements: list[tuple[Type[UIElement], dict]] = field(init=False)
     container_subelement_count: dict[str, int] = field(init=False)
@@ -126,3 +127,4 @@ class RootBlueprint(BlueprintContainer):
     width_px: float
     height_px: float
     label: str = "Interface Root"
+    global_constraints: list[Scorer] = field(default_factory=list)

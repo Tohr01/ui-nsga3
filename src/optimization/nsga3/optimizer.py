@@ -139,7 +139,10 @@ def run_nsga3_optimization(
         )
         crossover = ContainerCrossover()
         mutation = ContainerMutation(mutation_rate=mutation_rate)
-        problem = ContainerProblem(current_blueprint.get_scorers(), constraints)
+        problem = ContainerProblem(
+            current_blueprint.get_scorers(),
+            constraints + current_blueprint.additional_constraints,
+        )
 
         # We try to optimize an empty container
         # Store random container as the best container for the current blueprint
