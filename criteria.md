@@ -1,2 +1,0 @@
-- Minimum 44x44 pixels per touch target 
-    - https://www.w3.org/WAI/WCAG21/Understanding/target-size
