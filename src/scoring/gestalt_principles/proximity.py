@@ -17,9 +17,9 @@ class ProximityScorer(Scorer):
 
     References:
     -----------
-    [1] Y. Q. Lim, “Applying white space in UI design,”
-        UX Collective, Feb. 03, 2021.
-        https://uxdesign.cc/whitespace-in-ui-design-44e332c8e4a (accessed May 25, 2026).
+    [1] Koch, J., & Oulasvirta, A. (2016, May).
+        Computational layout perception using gestalt laws. In Proceedings of the 2016 CHI
+        conference extended abstracts on human factors in computing systems (pp. 1423-1429).
     [2] C. T. Zahn,
         “Graph-Theoretical Methods for detecting and Describing gestalt clusters,”
         IEEE Transactions on Computers,
