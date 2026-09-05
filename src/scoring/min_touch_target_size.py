@@ -11,7 +11,7 @@ class MinTouchTargetSizeScorer(Scorer):
     [1] Accessibility Guidelines Working Group,
         “Understanding Success Criterion 2.5.5: Target Size,” Web Accessibility Initiative (WAI),
         May 11, 2026. https://www.w3.org/WAI/WCAG21/Understanding/target-size
-        (accessed May 02, 2026).
+        (accessed September 05, 2026).
     """
 
     MIN_TOUCH_TARGET_WIDTH_PX = 44

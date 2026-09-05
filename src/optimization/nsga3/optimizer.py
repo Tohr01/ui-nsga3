@@ -79,10 +79,12 @@ def _get_ref_dirs_and_pop_size(
 
     if n_obj <= MAX_OBJECTIVES_DAS_DENNIS:
         # Use das-dennis for reference dirs
+        logger.debug("Using Das-Dennis for reference direction generation")
         p = _find_n_dd_partition(n_obj, target_points)
         ref_dirs = get_reference_directions("das-dennis", n_dim=n_obj, n_partitions=p)
     else:
         # Use Riesz s-energy for reference dirs
+        logger.debug("Using Riesz s-Energy for reference direction generation")
         ref_dirs = get_reference_directions(
             "energy", n_dim=n_obj, n_points=target_points, seed=seed
         )
