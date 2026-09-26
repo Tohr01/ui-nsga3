@@ -7,7 +7,8 @@ from ui.container import Container
 
 class AxisAlignScorer(Scorer):
     """
-    Penalizes variance in the center positions of elements along a specified axis (x or y).
+    Penalizes mean absolute deviation in the center positions of elements along a
+    specified axis (x or y).
 
     References:
     -----------
