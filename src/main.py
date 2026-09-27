@@ -39,7 +39,7 @@ parser.add_argument(
     "--generations",
     type=int,
     default=200,
-    help="Number of generations to run optimization for",
+    help="Number of generations to run optimization for (Applies to each container optimization individually, default: 200)",
 )
 parser.add_argument(
     "-p",
@@ -53,7 +53,7 @@ parser.add_argument(
     "--mutation-rate",
     type=float,
     default=0.1,
-    help="Mutation rate for optimization (default: 0.1)",
+    help="Mutation rate for optimization ranging from 0 to 1 (default: 0.1)",
 )
 parser.add_argument(
     "-s",
@@ -72,7 +72,7 @@ parser.add_argument(
     "-v",
     "--video",
     action="store_true",
-    help="Whether to render a video of the optimization process (default: False)",
+    help="Whether to render a video of the optimization process (requires ffmpeg to be in PATH, default: False)",
 )
 parser.add_argument(
     "-b",
