@@ -1,0 +1,14 @@
+Lucide Icons
+Source: https://lucide.dev/icons/
+License: ISC License
+Use: Search and cart icons in the header.
+
+Product image
+Source: https://pixabay.com/de/photos/niesencrew-schuhe-turnschuhe-mode-6306330/
+License: Pixabay Content License
+Use: Sneaker product image.
+
+Logo
+Source: Google Gemini
+Origin: AI-generated
+Use: Sneaker logo in the header; modified by the author.
