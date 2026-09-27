@@ -51,9 +51,6 @@ ui-nsga3
 │   ├── genetic
 │   │   ├── __init__.py
 │   │   ├── attributes/ <-- Reusable genetic elements such as position or size
-│   │   │   ├── position.py
-│   │   │   ├── rgbcolor.py
-│   │   │   └── size.py
 │   │   ├── mutation.py
 │   │   ├── recombination.py
 │   │   └── reproducible.py
