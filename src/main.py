@@ -1,6 +1,6 @@
 """
-A framework for User Interface generation/optimization using NSGA-III (Non-dominated Sorting Genetic Algorithm III).
-Uses a predefiend set of scorers/criteria and a blueprint of the Interface to generate approximately optimal UI designs.
+A framework for User Interface generation/optimization using U-NSGA-III (Unified Non-dominated Sorting Genetic Algorithm III).
+Uses a predefiend set of scorers/criteria/objectives and a blueprint of the Interface to generate approximately optimal UI designs.
 The generated designs will be written as HTML files in the output directory.
 
 Due to the complexity of the problem the Blueprint can be devided into sub-blueprints which will be optimized separately.
