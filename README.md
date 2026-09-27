@@ -30,3 +30,49 @@ options:
   -b, --blueprint BLUEPRINT
                         Name of directory in 'blueprints' directory to optimize. Directory must contain __init__.py file with a RootBlueprint object named 'interface_blueprint'.
 ```
+
+## Project structure
+```
+ui-nsga3
+├── assets/ <-- Contains assets that can be used by the defined blueprints
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── run.sh
+├── setup.sh
+├── src
+│   ├── blueprints <-- Predefined layout trees
+│   │   └── ecommerce_prototype <-- Sample e-commerce product page layout tree
+│   │       ├── __init__.py
+│   │       ├── content.py
+│   │       ├── footer.py
+│   │       └── header.py
+│   ├── constants.py
+│   ├── genetic
+│   │   ├── __init__.py
+│   │   ├── attributes/ <-- Reusable genetic elements such as position or size
+│   │   │   ├── position.py
+│   │   │   ├── rgbcolor.py
+│   │   │   └── size.py
+│   │   ├── mutation.py
+│   │   ├── recombination.py
+│   │   └── reproducible.py
+│   ├── logger.py
+│   ├── main.py
+│   ├── optimization
+│   │   └── nsga3/ <-- Contains evolutionary operators & optimization logic
+│   ├── rendering/ <-- Contains video and HTML output logic
+│   ├── scoring/ <-- Contains implementation of design objectives
+│   ├── ui
+│   │   ├── __init__.py
+│   │   ├── blueprint.py
+│   │   ├── canvas_context.py
+│   │   ├── components/ <-- Contains UI components (e.g. text)
+│   │   ├── container.py
+│   │   ├── element.py
+│   │   ├── enums.py
+│   │   ├── text_measure.py
+│   │   └── util.py
+│   └── util.py
+└── uv.lock
+```
